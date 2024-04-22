@@ -146,6 +146,27 @@
     </dependencyManagement>
 
     <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.7</version>  <!-- 请使用最新稳定版本号 -->
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal> <!-- 绑定JaCoCo到Maven测试阶段 -->
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id> <!-- 为报告提供一个ID -->
+                        <phase>test</phase> <!-- 绑定报告生成到测试阶段 -->
+                        <goals>
+                            <goal>report</goal> <!-- 生成报告 -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
         <pluginManagement>
             <plugins>
                 <!-- spring boot -->
@@ -174,7 +195,6 @@
                     <configuration>
                         <source>${java.version}</source>
                         <target>${java.version}</target>
-                        <skip>true</skip>
                         <encoding>${project.build.sourceEncoding}</encoding>
                     </configuration>
                 </plugin>
