@@ -1,0 +1,282 @@
+[
+  {
+    "caseId": "java_ut_eval_case#roncoo-education#0",
+    "methodDeclaration": {
+      "branchCount": 11,
+      "currentClassFieldMethodCallCount": 0,
+      "currentClassMethodCallCount": 0,
+      "filePath": "/Users/leiyi.ly/IdeaProjects/roncoo-education/roncoo-education-common/roncoo-education-common-core/src/main/java/com/roncoo/education/common/core/tools/DocUtil.java",
+      "lineCount": 57,
+      "methodFullName": "com.roncoo.education.common.core.tools.DocUtil#getDocPageCount#2",
+      "staticMethodCallCount": 27
+    },
+    "prompt": "",
+    "testRepository": "/Users/leiyi.ly/IdeaProjects/roncoo-education"
+  },
+  {
+    "caseId": "java_ut_eval_case#roncoo-education#1",
+    "methodDeclaration": {
+      "branchCount": 1,
+      "currentClassFieldMethodCallCount": 1,
+      "currentClassMethodCallCount": 0,
+      "filePath": "/Users/leiyi.ly/IdeaProjects/roncoo-education/roncoo-education-service/roncoo-education-service-system/src/main/java/com/roncoo/education/system/service/admin/biz/AdminWebsiteNavBiz.java",
+      "lineCount": 11,
+      "methodFullName": "com.roncoo.education.system.service.admin.biz.AdminWebsiteNavBiz#page#1",
+      "staticMethodCallCount": 11
+    },
+    "prompt": "",
+    "testRepository": "/Users/leiyi.ly/IdeaProjects/roncoo-education"
+  },
+  {
+    "caseId": "java_ut_eval_case#roncoo-education#2",
+    "methodDeclaration": {
+      "branchCount": 2,
+      "currentClassFieldMethodCallCount": 2,
+      "currentClassMethodCallCount": 0,
+      "filePath": "/Users/leiyi.ly/IdeaProjects/roncoo-education/roncoo-education-service/roncoo-education-service-course/src/main/java/com/roncoo/education/course/callback/biz/VodCommonBiz.java",
+      "lineCount": 12,
+      "methodFullName": "com.roncoo.education.course.callback.biz.VodCommonBiz#completeUpload#2",
+      "staticMethodCallCount": 8
+    },
+    "prompt": "",
+    "testRepository": "/Users/leiyi.ly/IdeaProjects/roncoo-education"
+  },
+  {
+    "caseId": "java_ut_eval_case#roncoo-education#3",
+    "methodDeclaration": {
+      "branchCount": 6,
+      "currentClassFieldMethodCallCount": 3,
+      "currentClassMethodCallCount": 0,
+      "filePath": "/Users/leiyi.ly/IdeaProjects/roncoo-education/roncoo-education-service/roncoo-education-service-course/src/main/java/com/roncoo/education/course/service/admin/biz/AdminUserStudyBiz.java",
+      "lineCount": 33,
+      "methodFullName": "com.roncoo.education.course.service.admin.biz.AdminUserStudyBiz#page#1",
+      "staticMethodCallCount": 43
+    },
+    "prompt": "",
+    "testRepository": "/Users/leiyi.ly/IdeaProjects/roncoo-education"
+  },
+  {
+    "caseId": "java_ut_eval_case#roncoo-education#4",
+    "methodDeclaration": {
+      "branchCount": 4,
+      "currentClassFieldMethodCallCount": 3,
+      "currentClassMethodCallCount": 0,
+      "filePath": "/Users/leiyi.ly/IdeaProjects/roncoo-education/roncoo-job/src/main/java/com/xxl/job/admin/service/impl/XxlJobServiceImpl.java",
+      "lineCount": 27,
+      "methodFullName": "com.xxl.job.admin.service.impl.XxlJobServiceImpl#dashboardInfo#0",
+      "staticMethodCallCount": 15
+    },
+    "prompt": "",
+    "testRepository": "/Users/leiyi.ly/IdeaProjects/roncoo-education"
+  },
+  {
+    "caseId": "java_ut_eval_case#roncoo-education#5",
+    "methodDeclaration": {
+      "branchCount": 1,
+      "currentClassFieldMethodCallCount": 1,
+      "currentClassMethodCallCount": 0,
+      "filePath": "/Users/leiyi.ly/IdeaProjects/roncoo-education/roncoo-education-service/roncoo-education-service-user/src/main/java/com/roncoo/education/user/service/admin/biz/AdminLecturerBiz.java",
+      "lineCount": 11,
+      "methodFullName": "com.roncoo.education.user.service.admin.biz.AdminLecturerBiz#page#1",
+      "staticMethodCallCount": 11
+    },
+    "prompt": "",
+    "testRepository": "/Users/leiyi.ly/IdeaProjects/roncoo-education"
+  },
+  {
+    "caseId": "java_ut_eval_case#roncoo-education#6",
+    "methodDeclaration": {
+      "branchCount": 3,
+      "currentClassFieldMethodCallCount": 2,
+      "currentClassMethodCallCount": 0,
+      "filePath": "/Users/leiyi.ly/IdeaProjects/roncoo-education/roncoo-education-service/roncoo-education-service-system/src/main/java/com/roncoo/education/system/service/admin/biz/AdminSysMenuRoleBiz.java",
+      "lineCount": 17,
+      "methodFullName": "com.roncoo.education.system.service.admin.biz.AdminSysMenuRoleBiz#save#1",
+      "staticMethodCallCount": 10
+    },
+    "prompt": "",
+    "testRepository": "/Users/leiyi.ly/IdeaProjects/roncoo-education"
+  },
+  {
+    "caseId": "java_ut_eval_case#roncoo-education#7",
+    "methodDeclaration": {
+      "branchCount": 3,
+      "currentClassFieldMethodCallCount": 0,
+      "currentClassMethodCallCount": 0,
+      "filePath": "/Users/leiyi.ly/IdeaProjects/roncoo-education/roncoo-job/src/main/java/com/xxl/job/admin/controller/interceptor/CookieInterceptor.java",
+      "lineCount": 14,
+      "methodFullName": "com.xxl.job.admin.controller.interceptor.CookieInterceptor#postHandle#4",
+      "staticMethodCallCount": 9
+    },
+    "prompt": "",
+    "testRepository": "/Users/leiyi.ly/IdeaProjects/roncoo-education"
+  },
+  {
+    "caseId": "java_ut_eval_case#roncoo-education#8",
+    "methodDeclaration": {
+      "branchCount": 3,
+      "currentClassFieldMethodCallCount": 1,
+      "currentClassMethodCallCount": 1,
+      "filePath": "/Users/leiyi.ly/IdeaProjects/roncoo-education/roncoo-job/src/main/java/com/xxl/job/admin/service/LoginService.java",
+      "lineCount": 19,
+      "methodFullName": "com.xxl.job.admin.service.LoginService#login#5",
+      "staticMethodCallCount": 12
+    },
+    "prompt": "",
+    "testRepository": "/Users/leiyi.ly/IdeaProjects/roncoo-education"
+  },
+  {
+    "caseId": "java_ut_eval_case#roncoo-education#9",
+    "methodDeclaration": {
+      "branchCount": 2,
+      "currentClassFieldMethodCallCount": 2,
+      "currentClassMethodCallCount": 0,
+      "filePath": "/Users/leiyi.ly/IdeaProjects/roncoo-education/roncoo-education-service/roncoo-education-service-course/src/main/java/com/roncoo/education/course/service/auth/biz/AuthUserCourseCommentBiz.java",
+      "lineCount": 14,
+      "methodFullName": "com.roncoo.education.course.service.auth.biz.AuthUserCourseCommentBiz#listForPage#1",
+      "staticMethodCallCount": 23
+    },
+    "prompt": "",
+    "testRepository": "/Users/leiyi.ly/IdeaProjects/roncoo-education"
+  },
+  {
+    "caseId": "java_ut_eval_case#roncoo-education#10",
+    "methodDeclaration": {
+      "branchCount": 8,
+      "currentClassFieldMethodCallCount": 1,
+      "currentClassMethodCallCount": 4,
+      "filePath": "/Users/leiyi.ly/IdeaProjects/roncoo-education/roncoo-job/src/main/java/com/xxl/job/admin/core/trigger/XxlJobTrigger.java",
+      "lineCount": 38,
+      "methodFullName": "com.xxl.job.admin.core.trigger.XxlJobTrigger#trigger#6",
+      "staticMethodCallCount": 26
+    },
+    "prompt": "",
+    "testRepository": "/Users/leiyi.ly/IdeaProjects/roncoo-education"
+  },
+  {
+    "caseId": "java_ut_eval_case#roncoo-education#11",
+    "methodDeclaration": {
+      "branchCount": 4,
+      "currentClassFieldMethodCallCount": 4,
+      "currentClassMethodCallCount": 0,
+      "filePath": "/Users/leiyi.ly/IdeaProjects/roncoo-education/roncoo-education-service/roncoo-education-service-course/src/main/java/com/roncoo/education/course/service/admin/biz/AdminResourceBiz.java",
+      "lineCount": 18,
+      "methodFullName": "com.roncoo.education.course.service.admin.biz.AdminResourceBiz#delete#1",
+      "staticMethodCallCount": 20
+    },
+    "prompt": "",
+    "testRepository": "/Users/leiyi.ly/IdeaProjects/roncoo-education"
+  },
+  {
+    "caseId": "java_ut_eval_case#roncoo-education#12",
+    "methodDeclaration": {
+      "branchCount": 3,
+      "currentClassFieldMethodCallCount": 2,
+      "currentClassMethodCallCount": 0,
+      "filePath": "/Users/leiyi.ly/IdeaProjects/roncoo-education/roncoo-education-service/roncoo-education-service-course/src/main/java/com/roncoo/education/course/service/admin/biz/AdminZoneCourseBiz.java",
+      "lineCount": 18,
+      "methodFullName": "com.roncoo.education.course.service.admin.biz.AdminZoneCourseBiz#page#1",
+      "staticMethodCallCount": 26
+    },
+    "prompt": "",
+    "testRepository": "/Users/leiyi.ly/IdeaProjects/roncoo-education"
+  },
+  {
+    "caseId": "java_ut_eval_case#roncoo-education#13",
+    "methodDeclaration": {
+      "branchCount": 2,
+      "currentClassFieldMethodCallCount": 0,
+      "currentClassMethodCallCount": 0,
+      "filePath": "/Users/leiyi.ly/IdeaProjects/roncoo-education/roncoo-education-common/roncoo-education-common-service/src/main/java/com/roncoo/education/common/service/HandlerException.java",
+      "lineCount": 12,
+      "methodFullName": "com.roncoo.education.common.service.HandlerException#processBizException#1",
+      "staticMethodCallCount": 13
+    },
+    "prompt": "",
+    "testRepository": "/Users/leiyi.ly/IdeaProjects/roncoo-education"
+  },
+  {
+    "caseId": "java_ut_eval_case#roncoo-education#14",
+    "methodDeclaration": {
+      "branchCount": 3,
+      "currentClassFieldMethodCallCount": 0,
+      "currentClassMethodCallCount": 0,
+      "filePath": "/Users/leiyi.ly/IdeaProjects/roncoo-education/roncoo-education-common/roncoo-education-common-service/src/main/java/com/roncoo/education/common/pay/biz/AliPayCommonBiz.java",
+      "lineCount": 23,
+      "methodFullName": "com.roncoo.education.common.pay.biz.AliPayCommonBiz#refundQuery#1",
+      "staticMethodCallCount": 18
+    },
+    "prompt": "",
+    "testRepository": "/Users/leiyi.ly/IdeaProjects/roncoo-education"
+  },
+  {
+    "caseId": "java_ut_eval_case#roncoo-education#15",
+    "methodDeclaration": {
+      "branchCount": 2,
+      "currentClassFieldMethodCallCount": 2,
+      "currentClassMethodCallCount": 1,
+      "filePath": "/Users/leiyi.ly/IdeaProjects/roncoo-education/roncoo-job/src/main/java/com/xxl/job/admin/core/util/LocalCacheUtil.java",
+      "lineCount": 12,
+      "methodFullName": "com.xxl.job.admin.core.util.LocalCacheUtil#get#1",
+      "staticMethodCallCount": 4
+    },
+    "prompt": "",
+    "testRepository": "/Users/leiyi.ly/IdeaProjects/roncoo-education"
+  },
+  {
+    "caseId": "java_ut_eval_case#roncoo-education#16",
+    "methodDeclaration": {
+      "branchCount": 1,
+      "currentClassFieldMethodCallCount": 1,
+      "currentClassMethodCallCount": 0,
+      "filePath": "/Users/leiyi.ly/IdeaProjects/roncoo-education/roncoo-education-service/roncoo-education-service-user/src/main/java/com/roncoo/education/user/service/auth/biz/AuthMsgUserBiz.java",
+      "lineCount": 12,
+      "methodFullName": "com.roncoo.education.user.service.auth.biz.AuthMsgUserBiz#list#1",
+      "staticMethodCallCount": 13
+    },
+    "prompt": "",
+    "testRepository": "/Users/leiyi.ly/IdeaProjects/roncoo-education"
+  },
+  {
+    "caseId": "java_ut_eval_case#roncoo-education#17",
+    "methodDeclaration": {
+      "branchCount": 7,
+      "currentClassFieldMethodCallCount": 4,
+      "currentClassMethodCallCount": 0,
+      "filePath": "/Users/leiyi.ly/IdeaProjects/roncoo-education/roncoo-education-service/roncoo-education-service-course/src/main/java/com/roncoo/education/course/service/admin/biz/AdminUserCourseBiz.java",
+      "lineCount": 38,
+      "methodFullName": "com.roncoo.education.course.service.admin.biz.AdminUserCourseBiz#page#1",
+      "staticMethodCallCount": 49
+    },
+    "prompt": "",
+    "testRepository": "/Users/leiyi.ly/IdeaProjects/roncoo-education"
+  },
+  {
+    "caseId": "java_ut_eval_case#roncoo-education#18",
+    "methodDeclaration": {
+      "branchCount": 3,
+      "currentClassFieldMethodCallCount": 2,
+      "currentClassMethodCallCount": 0,
+      "filePath": "/Users/leiyi.ly/IdeaProjects/roncoo-education/roncoo-education-service/roncoo-education-service-course/src/main/java/com/roncoo/education/course/service/admin/biz/AdminCourseBiz.java",
+      "lineCount": 17,
+      "methodFullName": "com.roncoo.education.course.service.admin.biz.AdminCourseBiz#edit#1",
+      "staticMethodCallCount": 22
+    },
+    "prompt": "",
+    "testRepository": "/Users/leiyi.ly/IdeaProjects/roncoo-education"
+  },
+  {
+    "caseId": "java_ut_eval_case#roncoo-education#19",
+    "methodDeclaration": {
+      "branchCount": 3,
+      "currentClassFieldMethodCallCount": 3,
+      "currentClassMethodCallCount": 0,
+      "filePath": "/Users/leiyi.ly/IdeaProjects/roncoo-education/roncoo-education-service/roncoo-education-service-course/src/main/java/com/roncoo/education/course/service/admin/biz/AdminCourseBiz.java",
+      "lineCount": 21,
+      "methodFullName": "com.roncoo.education.course.service.admin.biz.AdminCourseBiz#page#1",
+      "staticMethodCallCount": 33
+    },
+    "prompt": "",
+    "testRepository": "/Users/leiyi.ly/IdeaProjects/roncoo-education"
+  }
+]
