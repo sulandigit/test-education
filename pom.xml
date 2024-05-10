@@ -211,5 +211,6 @@
         <module>roncoo-education-gateway</module>
         <!-- 服务模块 -->
         <module>roncoo-education-service</module>
+        <module>roncoo-job</module>
     </modules>
 </project>
