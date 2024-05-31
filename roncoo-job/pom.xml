@@ -5,6 +5,11 @@
 	<groupId>com.xuxueli</groupId>
 	<artifactId>roncoo-job</artifactId>
 	<version>2.3.1</version>
+	<parent>
+		<groupId>com.roncoo</groupId>
+		<artifactId>roncoo-education</artifactId>
+		<version>14.0.0-RELEASE</version>
+	</parent>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
