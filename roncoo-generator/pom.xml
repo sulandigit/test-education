@@ -8,6 +8,12 @@
     <packaging>jar</packaging>
     <version>1.0.0</version>
 
+    <parent>
+        <groupId>com.roncoo</groupId>
+        <artifactId>roncoo-education</artifactId>
+        <version>14.0.0-RELEASE</version>
+    </parent>
+
     <name>roncoo-generator</name>
 
     <properties>
@@ -87,7 +93,6 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
-                    <skip>true</skip>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
