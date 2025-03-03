@@ -1,1 +1,1 @@
-{"dependencies": {"junit_version": "5.9.2", "mockito_core_version": "4.5.1", "mockito_inline_version": "4.5.1", "powermock_version": null}, "java_version": "1.8"}
+{"dependencies": {"test_framework": "junit5", "test_framework_version": "5.9.2", "mock_framework": "mockito", "mock_framework_version": "4.5.1", "extra_dependency_info": {"mockito_inline_version": "4.5.1"}}, "java_version": "1.8"}
