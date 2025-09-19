@@ -1,0 +1,85 @@
+# 测试环境配置文件
+spring:
+  profiles:
+    active: test
+  
+  # 数据源配置
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+    
+  # H2数据库控制台配置
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      
+  # JPA配置
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+        
+  # Redis配置（使用嵌入式Redis用于测试）
+  redis:
+    host: localhost
+    port: 6379
+    database: 15
+    timeout: 30000
+    password: 
+    jedis:
+      pool:
+        max-active: 50
+        max-wait: 3000
+        max-idle: 20
+        min-idle: 2
+        
+  # 缓存配置
+  cache:
+    type: redis
+    
+# 日志配置
+logging:
+  level:
+    com.roncoo.education: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    
+# 测试相关配置
+test:
+  # 测试数据配置
+  data:
+    # 是否自动加载测试数据
+    auto-load: true
+    # 测试数据文件路径
+    sql-script-path: classpath:test-data.sql
+    
+  # Mock配置
+  mock:
+    # 是否启用外部服务Mock
+    external-service: true
+    # Mock服务端口
+    wiremock-port: 8888
+    
+# 业务配置
+roncoo:
+  # JWT配置
+  jwt:
+    secret-key: test-secret-key-for-unit-testing
+    expire-time: 86400
+    
+  # 短信配置（测试环境不真实发送）
+  sms:
+    enabled: false
+    mock-enabled: true
+    
+  # 支付配置（测试环境）
+  pay:
+    mock-enabled: true
