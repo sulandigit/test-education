@@ -6,7 +6,7 @@ package com.roncoo.education.common.service;
 import com.roncoo.education.common.core.base.Base;
 import com.roncoo.education.common.core.tools.JSUtil;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
