@@ -19,7 +19,17 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
- * job group controller
+ * Job Group Controller - Executor Group Management
+ * 
+ * This controller manages executor groups which represent different
+ * application clusters that can execute scheduled jobs.
+ * 
+ * Features:
+ * - Executor group creation and configuration
+ * - Automatic and manual address registry
+ * - Group validation and permission checks
+ * - Pagination and search functionality
+ * 
  * @author xuxueli 2016-10-02 20:52:56
  */
 @Controller
