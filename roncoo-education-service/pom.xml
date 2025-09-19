@@ -21,6 +21,8 @@
         <module>roncoo-education-service-user</module>
         <!-- 课程微服务 -->
         <module>roncoo-education-service-course</module>
+        <!-- 考试微服务 -->
+        <module>roncoo-education-service-exam</module>
     </modules>
 
     <dependencies>
@@ -35,6 +37,10 @@
         <dependency>
             <groupId>com.roncoo</groupId>
             <artifactId>roncoo-education-feign-course</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.roncoo</groupId>
+            <artifactId>roncoo-education-feign-exam</artifactId>
         </dependency>
         <!-- roncoo -->
         <dependency>

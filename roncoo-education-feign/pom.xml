@@ -21,6 +21,8 @@
         <module>roncoo-education-feign-user</module>
         <!-- 资源接口工程 -->
         <module>roncoo-education-feign-course</module>
+        <!-- 考试接口工程 -->
+        <module>roncoo-education-feign-exam</module>
     </modules>
 
     <dependencies>

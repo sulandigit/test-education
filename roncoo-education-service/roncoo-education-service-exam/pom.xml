@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.roncoo</groupId>
+        <artifactId>roncoo-education-service</artifactId>
+        <version>14.0.0-RELEASE</version>
+    </parent>
+
+    <artifactId>roncoo-education-service-exam</artifactId>
+
+    <name>roncoo-education-service-exam</name>
+
+    <dependencies>
+        <!-- roncoo-education-feign-exam -->
+        <dependency>
+            <groupId>com.roncoo</groupId>
+            <artifactId>roncoo-education-feign-exam</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
