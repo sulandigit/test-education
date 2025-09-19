@@ -106,6 +106,13 @@
                 <version>1.6.1</version>
             </dependency>
 
+            <!-- mybatis plus -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>3.5.3.1</version>
+            </dependency>
+
             <!-- com.roncoo -->
             <dependency>
                 <groupId>com.roncoo</groupId>
