@@ -21,6 +21,8 @@
         <module>roncoo-education-service-user</module>
         <!-- 课程微服务 -->
         <module>roncoo-education-service-course</module>
+        <!-- 大屏数据微服务 -->
+        <module>roncoo-education-service-dashboard</module>
     </modules>
 
     <dependencies>
