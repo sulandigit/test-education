@@ -23,18 +23,42 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * index controller
+ * Index Controller - Main Dashboard and Authentication Controller
+ * 
+ * This controller handles the main dashboard, authentication operations,
+ * and basic navigation for the XXL-Job admin interface.
+ * 
+ * Features:
+ * - Dashboard with job statistics and charts
+ * - User login and logout functionality
+ * - Chart data for job execution reports
+ * - Help page navigation
+ * - Date binding configuration
+ * 
  * @author xuxueli 2015-12-19 16:13:16
  */
 @Controller
 public class IndexController {
 
+	/**
+	 * Job service for business operations
+	 */
 	@Resource
 	private XxlJobService xxlJobService;
+	
+	/**
+	 * Login service for authentication
+	 */
 	@Resource
 	private LoginService loginService;
 
 
+	/**
+	 * Display the main dashboard with job statistics
+	 * 
+	 * @param model Spring model for view data
+	 * @return view name for the dashboard
+	 */
 	@RequestMapping("/")
 	public String index(Model model) {
 
@@ -44,6 +68,13 @@ public class IndexController {
 		return "index";
 	}
 
+	/**
+	 * Get chart information for job execution reports
+	 * 
+	 * @param startDate start date for the chart data
+	 * @param endDate end date for the chart data
+	 * @return chart data in JSON format
+	 */
     @RequestMapping("/chartInfo")
 	@ResponseBody
 	public ReturnT<Map<String, Object>> chartInfo(Date startDate, Date endDate) {
@@ -51,6 +82,14 @@ public class IndexController {
         return chartInfo;
     }
 	
+	/**
+	 * Display login page or redirect to dashboard if already logged in
+	 * 
+	 * @param request HTTP servlet request
+	 * @param response HTTP servlet response
+	 * @param modelAndView model and view object
+	 * @return login page or redirect to dashboard
+	 */
 	@RequestMapping("/toLogin")
 	@PermissionLimit(limit=false)
 	public ModelAndView toLogin(HttpServletRequest request, HttpServletResponse response,ModelAndView modelAndView) {
@@ -61,6 +100,16 @@ public class IndexController {
 		return new ModelAndView("login");
 	}
 	
+	/**
+	 * Process user login request
+	 * 
+	 * @param request HTTP servlet request
+	 * @param response HTTP servlet response
+	 * @param userName user name for login
+	 * @param password password for login
+	 * @param ifRemember remember login option
+	 * @return login result
+	 */
 	@RequestMapping(value="login", method=RequestMethod.POST)
 	@ResponseBody
 	@PermissionLimit(limit=false)
@@ -69,6 +118,13 @@ public class IndexController {
 		return loginService.login(request, response, userName, password, ifRem);
 	}
 	
+	/**
+	 * Process user logout request
+	 * 
+	 * @param request HTTP servlet request
+	 * @param response HTTP servlet response
+	 * @return logout result
+	 */
 	@RequestMapping(value="logout", method=RequestMethod.POST)
 	@ResponseBody
 	@PermissionLimit(limit=false)
@@ -76,6 +132,11 @@ public class IndexController {
 		return loginService.logout(request, response);
 	}
 	
+	/**
+	 * Display help page
+	 * 
+	 * @return help page view name
+	 */
 	@RequestMapping("/help")
 	public String help() {
 
@@ -86,6 +147,11 @@ public class IndexController {
 		return "help";
 	}
 
+	/**
+	 * Initialize data binder for date format conversion
+	 * 
+	 * @param binder web data binder for type conversion
+	 */
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

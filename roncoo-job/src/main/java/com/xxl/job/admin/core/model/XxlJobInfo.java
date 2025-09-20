@@ -3,44 +3,141 @@ package com.xxl.job.admin.core.model;
 import java.util.Date;
 
 /**
- * xxl-job info
- *
+ * XXL-Job Information Model
+ * 
+ * This class represents a scheduled job configuration with all its properties
+ * including scheduling settings, execution parameters, and status information.
+ * 
+ * Main components:
+ * - Basic job information (ID, description, author)
+ * - Scheduling configuration (type, CRON expression, misfire strategy)
+ * - Executor settings (route strategy, handler, parameters, timeout)
+ * - Glue code configuration for dynamic job scripts
+ * - Trigger status and timing information
+ * 
  * @author xuxueli  2016-1-12 18:25:49
  */
 public class XxlJobInfo {
 	
-	private int id;				// 主键ID
+	/**
+	 * Primary key ID
+	 */
+	private int id;
 	
-	private int jobGroup;		// 执行器主键ID
+	/**
+	 * Executor group ID
+	 */
+	private int jobGroup;
+	
+	/**
+	 * Job description
+	 */
 	private String jobDesc;
 	
+	/**
+	 * Job creation time
+	 */
 	private Date addTime;
+	
+	/**
+	 * Job last update time
+	 */
 	private Date updateTime;
 	
-	private String author;		// 负责人
-	private String alarmEmail;	// 报警邮件
-
-	private String scheduleType;			// 调度类型
-	private String scheduleConf;			// 调度配置，值含义取决于调度类型
-	private String misfireStrategy;			// 调度过期策略
-
-	private String executorRouteStrategy;	// 执行器路由策略
-	private String executorHandler;		    // 执行器，任务Handler名称
-	private String executorParam;		    // 执行器，任务参数
-	private String executorBlockStrategy;	// 阻塞处理策略
-	private int executorTimeout;     		// 任务执行超时时间，单位秒
-	private int executorFailRetryCount;		// 失败重试次数
+	/**
+	 * Job author/owner
+	 */
+	private String author;
 	
-	private String glueType;		// GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
-	private String glueSource;		// GLUE源代码
-	private String glueRemark;		// GLUE备注
-	private Date glueUpdatetime;	// GLUE更新时间
+	/**
+	 * Alarm email addresses
+	 */
+	private String alarmEmail;
 
-	private String childJobId;		// 子任务ID，多个逗号分隔
+	/**
+	 * Schedule type (CRON, FIX_RATE, etc.)
+	 */
+	private String scheduleType;
+	
+	/**
+	 * Schedule configuration (CRON expression or interval)
+	 */
+	private String scheduleConf;
+	
+	/**
+	 * Misfire handling strategy
+	 */
+	private String misfireStrategy;
 
-	private int triggerStatus;		// 调度状态：0-停止，1-运行
-	private long triggerLastTime;	// 上次调度时间
-	private long triggerNextTime;	// 下次调度时间
+	/**
+	 * Executor routing strategy
+	 */
+	private String executorRouteStrategy;
+	
+	/**
+	 * Executor handler name
+	 */
+	private String executorHandler;
+	
+	/**
+	 * Executor parameters
+	 */
+	private String executorParam;
+	
+	/**
+	 * Executor blocking strategy
+	 */
+	private String executorBlockStrategy;
+	
+	/**
+	 * Execution timeout in seconds
+	 */
+	private int executorTimeout;
+	
+	/**
+	 * Retry count on failure
+	 */
+	private int executorFailRetryCount;
+	
+	/**
+	 * Glue type for dynamic scripts
+	 */
+	private String glueType;
+	
+	/**
+	 * Glue source code
+	 */
+	private String glueSource;
+	
+	/**
+	 * Glue remarks/comments
+	 */
+	private String glueRemark;
+	
+	/**
+	 * Glue last update time
+	 */
+	private Date glueUpdatetime;
+
+	/**
+	 * Child job IDs (comma-separated)
+	 */
+	private String childJobId;
+
+	/**
+	 * Trigger status: 0=stopped, 1=running
+	 */
+	private int triggerStatus;
+	
+	/**
+	 * Last trigger time
+	 */
+	private long triggerLastTime;
+	
+	/**
+	 * Next trigger time
+	 */
+	private long triggerNextTime;
 
 
 	public int getId() {
