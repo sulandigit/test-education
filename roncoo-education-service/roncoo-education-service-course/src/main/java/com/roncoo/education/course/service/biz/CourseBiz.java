@@ -13,6 +13,7 @@ import com.roncoo.education.common.core.tools.BeanUtil;
 import com.roncoo.education.common.service.BaseBiz;
 import com.roncoo.education.course.dao.*;
 import com.roncoo.education.course.dao.impl.mapper.entity.*;
+import com.roncoo.education.common.config.ThreadContext;
 import com.roncoo.education.course.service.biz.req.CourseCommentPageReq;
 import com.roncoo.education.course.service.biz.req.CourseReq;
 import com.roncoo.education.course.service.biz.resp.*;
@@ -52,6 +53,10 @@ public class CourseBiz extends BaseBiz {
     private final CourseChapterPeriodDao periodDao;
     @NotNull
     private final UserCourseCommentDao userCourseCommentDao;
+    @NotNull
+    private final UserCourseCommentLikeDao userCourseCommentLikeDao;
+    @NotNull
+    private final UserCourseCommentReportDao userCourseCommentReportDao;
     @NotNull
     private final UserCourseCollectDao userCourseCollectDao;
     @NotNull
@@ -144,19 +149,117 @@ public class CourseBiz extends BaseBiz {
         Page<CourseCommentResp> resp = PageUtil.transform(userCourseCommentPage, CourseCommentResp.class);
         if (CollUtil.isNotEmpty(userCourseCommentPage.getList())) {
             resp.setList(filter(userCourseCommentPage.getList(), 0L));
+            
             // 用户信息
             List<Long> userIds = userCourseCommentPage.getList().stream().map(UserCourseComment::getUserId).collect(Collectors.toList());
             Map<Long, UsersVO> usersVOMap = feignUsers.listByIds(userIds);
-            for (CourseCommentResp commentResp : resp.getList()) {
-                UsersVO usersVO = usersVOMap.get(commentResp.getUserId());
+            
+            // 获取所有评论 ID
+            List<Long> commentIds = getAllCommentIds(resp.getList());
+            
+            // 批量获取点赞数据
+            Map<Long, Integer> likeCountMap = getLikeCountMap(commentIds);
+            
+            // 如果用户已登录，获取用户点赞和举报状态
+            Map<Long, Boolean> userLikeMap = new HashMap<>();
+            Map<Long, Boolean> userReportMap = new HashMap<>();
+            Long currentUserId = ThreadContext.userId();
+            if (currentUserId != null) {
+                userLikeMap = getUserLikeMap(currentUserId, commentIds);
+                userReportMap = getUserReportMap(currentUserId, commentIds);
+            }
+            
+            // 填充数据
+            fillCommentInteractionData(resp.getList(), usersVOMap, likeCountMap, userLikeMap, userReportMap);
+        }
+        return Result.success(resp);
+    }
+    
+    /**
+     * 递归获取所有评论 ID
+     */
+    private List<Long> getAllCommentIds(List<CourseCommentResp> comments) {
+        List<Long> commentIds = new ArrayList<>();
+        for (CourseCommentResp comment : comments) {
+            commentIds.add(comment.getId());
+            if (CollUtil.isNotEmpty(comment.getCourseCommentRespList())) {
+                commentIds.addAll(getAllCommentIds(comment.getCourseCommentRespList()));
+            }
+        }
+        return commentIds;
+    }
+    
+    /**
+     * 获取点赞数量映射
+     */
+    private Map<Long, Integer> getLikeCountMap(List<Long> commentIds) {
+        Map<Long, Integer> likeCountMap = new HashMap<>();
+        if (CollUtil.isNotEmpty(commentIds)) {
+            for (Long commentId : commentIds) {
+                int likeCount = userCourseCommentLikeDao.countLikesByCommentId(commentId);
+                likeCountMap.put(commentId, likeCount);
+            }
+        }
+        return likeCountMap;
+    }
+    
+    /**
+     * 获取用户点赞状态
+     */
+    private Map<Long, Boolean> getUserLikeMap(Long userId, List<Long> commentIds) {
+        Map<Long, Boolean> userLikeMap = new HashMap<>();
+        if (CollUtil.isNotEmpty(commentIds)) {
+            List<UserCourseCommentLike> userLikes = userCourseCommentLikeDao.listUserLikesByCommentIds(userId, commentIds);
+            for (UserCourseCommentLike like : userLikes) {
+                userLikeMap.put(like.getCommentId(), true);
+            }
+        }
+        return userLikeMap;
+    }
+    
+    /**
+     * 获取用户举报状态
+     */
+    private Map<Long, Boolean> getUserReportMap(Long userId, List<Long> commentIds) {
+        Map<Long, Boolean> userReportMap = new HashMap<>();
+        if (CollUtil.isNotEmpty(commentIds)) {
+            for (Long commentId : commentIds) {
+                UserCourseCommentReport report = userCourseCommentReportDao.getByUserIdAndCommentId(userId, commentId);
+                userReportMap.put(commentId, report != null);
+            }
+        }
+        return userReportMap;
+    }
+    
+    /**
+     * 递归填充评论互动数据
+     */
+    private void fillCommentInteractionData(List<CourseCommentResp> comments, 
+                                          Map<Long, UsersVO> usersVOMap,
+                                          Map<Long, Integer> likeCountMap,
+                                          Map<Long, Boolean> userLikeMap,
+                                          Map<Long, Boolean> userReportMap) {
+        for (CourseCommentResp commentResp : comments) {
+            // 用户信息
+            UsersVO usersVO = usersVOMap.get(commentResp.getUserId());
+            if (usersVO != null) {
                 usersVO.setMobile(DesensitizedUtil.mobilePhone(usersVO.getMobile()));
                 if (StrUtil.isBlank(usersVO.getNickname())) {
                     usersVO.setNickname(usersVO.getMobile());
                 }
                 commentResp.setUsersVO(usersVO);
             }
+            
+            // 互动数据
+            commentResp.setLikeCount(likeCountMap.getOrDefault(commentResp.getId(), 0));
+            commentResp.setIsLiked(userLikeMap.getOrDefault(commentResp.getId(), false));
+            commentResp.setIsReported(userReportMap.getOrDefault(commentResp.getId(), false));
+            
+            // 递归处理子评论
+            if (CollUtil.isNotEmpty(commentResp.getCourseCommentRespList())) {
+                fillCommentInteractionData(commentResp.getCourseCommentRespList(), usersVOMap, likeCountMap, userLikeMap, userReportMap);
+            }
         }
-        return Result.success(resp);
     }
 
     private List<CourseCommentResp> filter(List<UserCourseComment> userCourseComments, Long commentId) {

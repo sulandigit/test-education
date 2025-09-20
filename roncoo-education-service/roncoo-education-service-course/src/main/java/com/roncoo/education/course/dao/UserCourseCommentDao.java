@@ -73,4 +73,12 @@ public interface UserCourseCommentDao {
     int countByExample(UserCourseCommentExample example);
 
     List<UserCourseComment> listByCourseIdAndStatusId(Long courseId, Integer statusId);
+
+    /**
+     * 根据父评论 ID 统计回复数量
+     *
+     * @param commentId 父评论 ID
+     * @return 回复数量
+     */
+    int countByCommentId(Long commentId);
 }

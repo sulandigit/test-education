@@ -58,6 +58,24 @@ public class CourseCommentResp implements Serializable {
     @ApiModelProperty(value = "评论内容")
     private String commentText;
 
+    @ApiModelProperty(value = "点赞数量")
+    private Integer likeCount;
+
+    @ApiModelProperty(value = "回复数量")
+    private Integer replyCount;
+
+    @ApiModelProperty(value = "@提及的用户")
+    private String mentionUsers;
+
+    @ApiModelProperty(value = "当前用户是否点赞")
+    private Boolean isLiked;
+
+    @ApiModelProperty(value = "当前用户是否举报")
+    private Boolean isReported;
+
+    @ApiModelProperty(value = "回复的用户昵称")
+    private String replyToUserName;
+
     @ApiModelProperty(value = "课程评论")
     private List<CourseCommentResp> courseCommentRespList;
 }

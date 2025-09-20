@@ -57,8 +57,35 @@ public class AuthUserCourseCommentBiz extends BaseBiz {
     public Result<String> add(AuthUserCourseCommentReq req) {
         UserCourseComment userCourseComment = BeanUtil.copyProperties(req, UserCourseComment.class);
         userCourseComment.setUserId(ThreadContext.userId());
+        userCourseComment.setLikeCount(0);
+        userCourseComment.setReplyCount(0);
+        
+        // 处理@提及功能
+        if (req.getMentionUsers() != null && !req.getMentionUsers().trim().isEmpty()) {
+            userCourseComment.setMentionUsers(req.getMentionUsers());
+            // TODO: 可以在这里添加发送通知给被@的用户的逻辑
+        }
+        
         dao.save(userCourseComment);
+        
+        // 如果是回复评论，更新父评论的回复数量
+        if (req.getCommentId() != null && req.getCommentId() > 0) {
+            updateCommentReplyCount(req.getCommentId());
+        }
+        
         return Result.success("评论成功");
+    }
+    
+    /**
+     * 更新评论回复数量
+     */
+    private void updateCommentReplyCount(Long commentId) {
+        UserCourseComment parentComment = dao.getById(commentId);
+        if (parentComment != null) {
+            int replyCount = dao.countByCommentId(commentId);
+            parentComment.setReplyCount(replyCount);
+            dao.updateById(parentComment);
+        }
     }
 
 }

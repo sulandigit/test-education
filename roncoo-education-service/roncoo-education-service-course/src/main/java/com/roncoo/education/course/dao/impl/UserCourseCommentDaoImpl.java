@@ -78,4 +78,11 @@ public class UserCourseCommentDaoImpl implements UserCourseCommentDao {
         example.createCriteria().andCourseIdEqualTo(courseId).andStatusIdEqualTo(statusId);
         return this.mapper.selectByExample(example);
     }
+
+    @Override
+    public int countByCommentId(Long commentId) {
+        UserCourseCommentExample example = new UserCourseCommentExample();
+        example.createCriteria().andCommentIdEqualTo(commentId).andStatusIdEqualTo(1);
+        return this.mapper.countByExample(example);
+    }
 }

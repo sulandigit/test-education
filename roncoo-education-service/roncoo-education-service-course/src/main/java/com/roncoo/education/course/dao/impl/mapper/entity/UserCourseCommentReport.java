@@ -3,7 +3,13 @@ package com.roncoo.education.course.dao.impl.mapper.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class UserCourseComment implements Serializable {
+/**
+ * 课程评论举报实体类
+ *
+ * @author assistant
+ * @date 2025-09-20
+ */
+public class UserCourseCommentReport implements Serializable {
     private Long id;
 
     private LocalDateTime gmtCreate;
@@ -12,21 +18,21 @@ public class UserCourseComment implements Serializable {
 
     private Integer statusId;
 
-    private Integer sort;
-
     private Long userId;
-
-    private Long courseId;
 
     private Long commentId;
 
-    private String commentText;
+    private Integer reportType; // 举报类型：1-垃圾广告，2-违法违规，3-不良信息，4-其他
 
-    private Integer likeCount; // 点赞数量
+    private String reportReason; // 举报原因
 
-    private Integer replyCount; // 回复数量
+    private Integer handleStatus; // 处理状态：0-待处理，1-已处理，2-已驳回
 
-    private String mentionUsers; // @提及的用户ID，逗号分隔
+    private String handleResult; // 处理结果
+
+    private Long handleUserId; // 处理人ID
+
+    private LocalDateTime handleTime; // 处理时间
 
     private static final long serialVersionUID = 1L;
 
@@ -62,28 +68,12 @@ public class UserCourseComment implements Serializable {
         this.statusId = statusId;
     }
 
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
     public Long getUserId() {
         return userId;
     }
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public Long getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(Long courseId) {
-        this.courseId = courseId;
     }
 
     public Long getCommentId() {
@@ -94,36 +84,52 @@ public class UserCourseComment implements Serializable {
         this.commentId = commentId;
     }
 
-    public String getCommentText() {
-        return commentText;
+    public Integer getReportType() {
+        return reportType;
     }
 
-    public void setCommentText(String commentText) {
-        this.commentText = commentText == null ? null : commentText.trim();
+    public void setReportType(Integer reportType) {
+        this.reportType = reportType;
     }
 
-    public Integer getLikeCount() {
-        return likeCount;
+    public String getReportReason() {
+        return reportReason;
     }
 
-    public void setLikeCount(Integer likeCount) {
-        this.likeCount = likeCount;
+    public void setReportReason(String reportReason) {
+        this.reportReason = reportReason == null ? null : reportReason.trim();
     }
 
-    public Integer getReplyCount() {
-        return replyCount;
+    public Integer getHandleStatus() {
+        return handleStatus;
     }
 
-    public void setReplyCount(Integer replyCount) {
-        this.replyCount = replyCount;
+    public void setHandleStatus(Integer handleStatus) {
+        this.handleStatus = handleStatus;
     }
 
-    public String getMentionUsers() {
-        return mentionUsers;
+    public String getHandleResult() {
+        return handleResult;
     }
 
-    public void setMentionUsers(String mentionUsers) {
-        this.mentionUsers = mentionUsers == null ? null : mentionUsers.trim();
+    public void setHandleResult(String handleResult) {
+        this.handleResult = handleResult == null ? null : handleResult.trim();
+    }
+
+    public Long getHandleUserId() {
+        return handleUserId;
+    }
+
+    public void setHandleUserId(Long handleUserId) {
+        this.handleUserId = handleUserId;
+    }
+
+    public LocalDateTime getHandleTime() {
+        return handleTime;
+    }
+
+    public void setHandleTime(LocalDateTime handleTime) {
+        this.handleTime = handleTime;
     }
 
     @Override
@@ -136,14 +142,14 @@ public class UserCourseComment implements Serializable {
         sb.append(", gmtCreate=").append(gmtCreate);
         sb.append(", gmtModified=").append(gmtModified);
         sb.append(", statusId=").append(statusId);
-        sb.append(", sort=").append(sort);
         sb.append(", userId=").append(userId);
-        sb.append(", courseId=").append(courseId);
         sb.append(", commentId=").append(commentId);
-        sb.append(", commentText=").append(commentText);
-        sb.append(", likeCount=").append(likeCount);
-        sb.append(", replyCount=").append(replyCount);
-        sb.append(", mentionUsers=").append(mentionUsers);
+        sb.append(", reportType=").append(reportType);
+        sb.append(", reportReason=").append(reportReason);
+        sb.append(", handleStatus=").append(handleStatus);
+        sb.append(", handleResult=").append(handleResult);
+        sb.append(", handleUserId=").append(handleUserId);
+        sb.append(", handleTime=").append(handleTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

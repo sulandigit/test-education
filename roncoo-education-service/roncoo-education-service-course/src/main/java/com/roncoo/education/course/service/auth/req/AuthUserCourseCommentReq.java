@@ -32,4 +32,10 @@ public class AuthUserCourseCommentReq implements Serializable {
     @NotBlank(message = "请填写评论内容")
     @ApiModelProperty(value = "评论内容")
     private String commentText;
+
+    @ApiModelProperty(value = "@提及的用户ID列表，逗号分隔", required = false)
+    private String mentionUsers;
+
+    @ApiModelProperty(value = "回复的用户昵称", required = false)
+    private String replyToUserName;
 }
