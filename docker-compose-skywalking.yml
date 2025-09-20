@@ -1,0 +1,191 @@
+version: "3.8"
+services:
+  # ElasticSearch - SkyWalking数据存储
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
+    container_name: skywalking-elasticsearch
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - skywalking_elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - education
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # SkyWalking OAP 服务器
+  oap-server:
+    image: apache/skywalking-oap-server:8.16.0
+    container_name: skywalking-oap-server
+    restart: always
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      SW_STORAGE: elasticsearch
+      SW_STORAGE_ES_CLUSTER_NODES: elasticsearch:9200
+      SW_HEALTH_CHECKER: default
+      SW_TELEMETRY: prometheus
+      JAVA_OPTS: "-Xmx2048m"
+    ports:
+      - "11800:11800"  # gRPC
+      - "12800:12800"  # HTTP
+    volumes:
+      - ./skywalking-config/oap-config:/skywalking/config
+    networks:
+      - education
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:12800/internal/l7check || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # SkyWalking UI
+  skywalking-ui:
+    image: apache/skywalking-ui:8.16.0
+    container_name: skywalking-ui
+    restart: always
+    depends_on:
+      oap-server:
+        condition: service_healthy
+    environment:
+      SW_OAP_ADDRESS: http://oap-server:12800
+      SW_ZIPKIN_ADDRESS: http://oap-server:9412
+    ports:
+      - "8080:8080"
+    networks:
+      - education
+
+  # 应用服务 - 网关
+  gateway:
+    build:
+      context: ./roncoo-education-gateway
+      args:
+        JAVA_OPTS: '-Xmn256M -Xmx256M'
+        RUN_ARGS: '--spring.profiles.active=demo --spring.cloud.nacos.server-addr=localhost:8848'
+    image: roncoo-education-gateway
+    container_name: gateway
+    restart: always
+    depends_on:
+      oap-server:
+        condition: service_healthy
+    environment:
+      # SkyWalking Agent环境变量
+      SW_AGENT_NAME: education-gateway
+      SW_AGENT_COLLECTOR_BACKEND_SERVICES: oap-server:11800
+      SW_AGENT_SAMPLE: 5
+      SW_LOGGING_LEVEL: INFO
+    volumes:
+      - /home/roncoo/logs/gateway:/root/logs/gateway
+      - ./skywalking-agent:/skywalking-agent
+      - ./skywalking-config/gateway-agent.config:/skywalking-agent/config/agent.config
+    networks:
+      - education
+    ports:
+      - "7700:7700"
+
+  # 应用服务 - 系统服务
+  service-system:
+    build:
+      context: ./roncoo-education-service/roncoo-education-service-system
+      args:
+        JAVA_OPTS: '-Xmn256M -Xmx256M'
+        RUN_ARGS: '--spring.profiles.active=demo --spring.cloud.nacos.server-addr=localhost:8848'
+    image: roncoo-education-service-system
+    container_name: system
+    restart: always
+    depends_on:
+      oap-server:
+        condition: service_healthy
+    environment:
+      # SkyWalking Agent环境变量
+      SW_AGENT_NAME: education-service-system
+      SW_AGENT_COLLECTOR_BACKEND_SERVICES: oap-server:11800
+      SW_AGENT_SAMPLE: 3
+      SW_LOGGING_LEVEL: INFO
+    volumes:
+      - /home/roncoo/logs/system:/root/logs/system
+      - ./skywalking-agent:/skywalking-agent
+      - ./skywalking-config/system-agent.config:/skywalking-agent/config/agent.config
+    networks:
+      - education
+    ports:
+      - "7710:7710"
+
+  # 应用服务 - 用户服务
+  service-user:
+    build:
+      context: ./roncoo-education-service/roncoo-education-service-user
+      args:
+        JAVA_OPTS: '-Xmn256M -Xmx256M'
+        RUN_ARGS: '--spring.profiles.active=demo --spring.cloud.nacos.server-addr=localhost:8848'
+    image: roncoo-education-service-user
+    container_name: user
+    restart: always
+    depends_on:
+      oap-server:
+        condition: service_healthy
+    environment:
+      # SkyWalking Agent环境变量
+      SW_AGENT_NAME: education-service-user
+      SW_AGENT_COLLECTOR_BACKEND_SERVICES: oap-server:11800
+      SW_AGENT_SAMPLE: 3
+      SW_LOGGING_LEVEL: INFO
+    volumes:
+      - /home/roncoo/logs/user:/root/logs/user
+      - ./skywalking-agent:/skywalking-agent
+      - ./skywalking-config/user-agent.config:/skywalking-agent/config/agent.config
+    networks:
+      - education
+    ports:
+      - "7720:7720"
+
+  # 应用服务 - 课程服务
+  service-course:
+    build:
+      context: ./roncoo-education-service/roncoo-education-service-course
+      args:
+        JAVA_OPTS: '-Xmn256M -Xmx256M'
+        RUN_ARGS: '--spring.profiles.active=demo --spring.cloud.nacos.server-addr=localhost:8848'
+    image: roncoo-education-service-course
+    container_name: course
+    restart: always
+    depends_on:
+      oap-server:
+        condition: service_healthy
+    environment:
+      # SkyWalking Agent环境变量
+      SW_AGENT_NAME: education-service-course
+      SW_AGENT_COLLECTOR_BACKEND_SERVICES: oap-server:11800
+      SW_AGENT_SAMPLE: 3
+      SW_LOGGING_LEVEL: INFO
+    volumes:
+      - /home/roncoo/logs/course:/root/logs/course
+      - ./skywalking-agent:/skywalking-agent
+      - ./skywalking-config/course-agent.config:/skywalking-agent/config/agent.config
+    networks:
+      - education
+    ports:
+      - "7730:7730"
+
+volumes:
+  skywalking_elasticsearch_data:
+    driver: local
+
+networks:
+  education:
+    driver: bridge

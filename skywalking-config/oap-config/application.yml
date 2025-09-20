@@ -1,0 +1,120 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# SkyWalking OAP 服务器配置
+
+cluster:
+  selector: ${SW_CLUSTER:standalone}
+  standalone:
+
+core:
+  selector: ${SW_CORE:default}
+  default:
+    # 链路追踪的最大长度
+    maxConcurrentCallsPerConnection: ${SW_CORE_MAX_CONCURRENT_CALLS_PER_CONNECTION:4}
+    # 最大消息大小
+    maxMessageSize: ${SW_CORE_MAX_MESSAGE_SIZE:4194304}
+    # gRPC线程池大小
+    gRPCThreadPoolSize: ${SW_CORE_GRPC_THREAD_POOL_SIZE:0}
+    gRPCThreadPoolQueueSize: ${SW_CORE_GRPC_THREAD_POOL_QUEUE_SIZE:0}
+    # 分析指标数据时的最大并发度
+    maxConcurrentCallsPerConnection: ${SW_CORE_MAX_CONCURRENT_CALLS_PER_CONNECTION:4}
+    # 下游连接池大小
+    downSampling:
+      - Hour
+      - Day
+    # 数据的TTL（生存时间）
+    recordDataTTL: ${SW_CORE_RECORD_DATA_TTL:3}  # 3天
+    metricsDataTTL: ${SW_CORE_METRICS_DATA_TTL:7}  # 7天
+    # 分析报告是否开启
+    enableDatabaseSlowSql: ${SW_CORE_ENABLE_DATABASE_SLOW_SQL:true}
+
+storage:
+  selector: ${SW_STORAGE:elasticsearch}
+  elasticsearch:
+    # ES集群名称
+    clusterNodes: ${SW_STORAGE_ES_CLUSTER_NODES:elasticsearch:9200}
+    protocol: ${SW_STORAGE_ES_HTTP_PROTOCOL:http}
+    # 连接超时时间
+    connectTimeout: ${SW_STORAGE_ES_CONNECT_TIMEOUT:3000}
+    # 套接字超时时间
+    socketTimeout: ${SW_STORAGE_ES_SOCKET_TIMEOUT:30000}
+    # 索引分片数
+    indexShardsNumber: ${SW_STORAGE_ES_INDEX_SHARDS_NUMBER:1}
+    # 索引副本数
+    indexReplicasNumber: ${SW_STORAGE_ES_INDEX_REPLICAS_NUMBER:0}
+    # 批量操作处理器设置
+    bulkActions: ${SW_STORAGE_ES_BULK_ACTIONS:2000}
+    # 刷新间隔
+    flushInterval: ${SW_STORAGE_ES_FLUSH_INTERVAL:10}
+    # 并发请求数
+    concurrentRequests: ${SW_STORAGE_ES_CONCURRENT_REQUESTS:2}
+    # 高级配置
+    advanced: ${SW_STORAGE_ES_ADVANCED:""}
+
+receiver-sharing-server:
+  selector: ${SW_RECEIVER_SHARING_SERVER:default}
+  default:
+    restHost: ${SW_RECEIVER_SHARING_HOST:0.0.0.0}
+    restPort: ${SW_RECEIVER_SHARING_PORT:12800}
+    restContextPath: ${SW_RECEIVER_SHARING_CONTEXT_PATH:/}
+    restMinThreads: ${SW_RECEIVER_SHARING_JETTY_MIN_THREADS:1}
+    restMaxThreads: ${SW_RECEIVER_SHARING_JETTY_MAX_THREADS:200}
+    restIdleTimeOut: ${SW_RECEIVER_SHARING_JETTY_IDLE_TIMEOUT:30000}
+    restAcceptorPriorityDelta: ${SW_RECEIVER_SHARING_JETTY_DELTA:0}
+    restAcceptQueueSize: ${SW_RECEIVER_SHARING_JETTY_QUEUE_SIZE:0}
+
+receiver-trace:
+  selector: ${SW_RECEIVER_TRACE:default}
+  default:
+    # Trace接收器配置
+    bufferPath: ${SW_RECEIVER_BUFFER_PATH:""}
+    bufferOffsetMaxFileSize: ${SW_RECEIVER_BUFFER_OFFSET_MAX_FILE_SIZE:100}
+    bufferDataMaxFileSize: ${SW_RECEIVER_BUFFER_DATA_MAX_FILE_SIZE:500}
+    bufferFileCleanWhenRestart: ${SW_RECEIVER_BUFFER_FILE_CLEAN_WHEN_RESTART:false}
+    sampleRate: ${SW_TRACE_SAMPLE_RATE:10000}
+
+receiver-jvm:
+  selector: ${SW_RECEIVER_JVM:default}
+  default:
+
+receiver-clr:
+  selector: ${SW_RECEIVER_CLR:default}
+  default:
+
+receiver-zipkin:
+  selector: ${SW_RECEIVER_ZIPKIN:default}
+  default:
+    restHost: ${SW_RECEIVER_ZIPKIN_HOST:0.0.0.0}
+    restPort: ${SW_RECEIVER_ZIPKIN_PORT:9412}
+    restContextPath: ${SW_RECEIVER_ZIPKIN_CONTEXT_PATH:/}
+
+query:
+  selector: ${SW_QUERY:graphql}
+  graphql:
+    path: ${SW_QUERY_GRAPHQL_PATH:/graphql}
+    # 查询超时时间
+    queryTimeout: ${SW_QUERY_TIMEOUT:10}
+
+alarm:
+  selector: ${SW_ALARM:default}
+  default:
+
+telemetry:
+  selector: ${SW_TELEMETRY:none}
+  none:
+  prometheus:
+    host: ${SW_TELEMETRY_PROMETHEUS_HOST:0.0.0.0}
+    port: ${SW_TELEMETRY_PROMETHEUS_PORT:1234}

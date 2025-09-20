@@ -1,0 +1,125 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# SkyWalking 告警规则配置
+
+rules:
+  # 服务可用性告警
+  service_availability_rule:
+    metrics-name: service_percent
+    op: <
+    threshold: 80
+    period: 2
+    count: 3
+    silence-period: 10
+    message: "服务[{name}]可用性低于80%，当前值: {value}%"
+
+  # 服务平均响应时间告警
+  service_resp_time_rule:
+    metrics-name: service_resp_time
+    op: ">"
+    threshold: 3000
+    period: 2
+    count: 2
+    silence-period: 10
+    message: "服务[{name}]平均响应时间超过3秒，当前值: {value}ms"
+
+  # 服务P99响应时间告警
+  service_p99_resp_time_rule:
+    metrics-name: service_p99
+    op: ">"
+    threshold: 5000
+    period: 2
+    count: 2
+    silence-period: 10
+    message: "服务[{name}] P99响应时间超过5秒，当前值: {value}ms"
+
+  # 服务实例可用性告警
+  service_instance_availability_rule:
+    metrics-name: service_instance_percent
+    op: <
+    threshold: 70
+    period: 2
+    count: 2
+    silence-period: 10
+    message: "服务实例[{name}]可用性低于70%，当前值: {value}%"
+
+  # 数据库访问慢查询告警
+  database_access_resp_time_rule:
+    metrics-name: database_access_resp_time
+    op: ">"
+    threshold: 1000
+    period: 2
+    count: 2
+    silence-period: 10
+    message: "数据库访问响应时间超过1秒，当前值: {value}ms"
+
+  # 端点平均响应时间告警
+  endpoint_avg_resp_time_rule:
+    metrics-name: endpoint_avg
+    op: ">"
+    threshold: 2000
+    period: 2
+    count: 2
+    silence-period: 10
+    message: "端点[{name}]平均响应时间超过2秒，当前值: {value}ms"
+
+webhooks:
+  # 钉钉机器人webhook示例（需要配置实际的webhook地址）
+  # - http://dingding-webhook-url
+  
+  # 企业微信机器人webhook示例（需要配置实际的webhook地址）
+  # - http://wechat-work-webhook-url
+
+  # 自定义webhook示例（需要配置实际的webhook地址）
+  # - http://your-custom-webhook-url
+
+gRPCHook:
+  # gRPC告警钩子配置（可选）
+
+compositeHook:
+  # 复合告警钩子配置（可选）
+
+slack:
+  # Slack告警配置（可选）
+
+wechat:
+  # 微信告警配置（可选）
+
+dingtalk:
+  # 钉钉告警配置（可选）
+
+feishu:
+  # 飞书告警配置（可选）
+
+pagerduty:
+  # PagerDuty告警配置（可选）
+
+discord:
+  # Discord告警配置（可选）
+
+huawei:
+  # 华为云告警配置（可选）
+
+telegram:
+  # Telegram告警配置（可选）
+
+email:
+  # 邮件告警配置（可选）
+  # host: smtp.example.com
+  # port: 587
+  # username: your_email@example.com
+  # password: your_password
+  # ssl: true

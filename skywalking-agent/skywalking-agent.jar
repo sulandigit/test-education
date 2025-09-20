@@ -1,0 +1,9 @@
+# SkyWalking Agent JAR 占位文件
+# 实际部署时请从 Apache SkyWalking 官方下载最新版本的 Agent
+# 下载地址: https://skywalking.apache.org/downloads/
+# 
+# 下载步骤:
+# 1. 访问 https://skywalking.apache.org/downloads/
+# 2. 下载 Apache SkyWalking APM 包
+# 3. 解压后将 agent 目录复制到此位置
+# 4. 确保 skywalking-agent.jar 文件在此目录中
