@@ -1,0 +1,210 @@
+# ShardingSphere 分库分表配置 - 课程服务
+spring:
+  shardingsphere:
+    # 数据源配置
+    datasource:
+      names: course-db-0,course-db-1,course-db-0-slave,course-db-1-slave
+      
+      # 主库配置
+      course-db-0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/os_course_0?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+        username: root
+        password: 123456
+        hikari:
+          minimum-idle: 5
+          maximum-pool-size: 20
+          auto-commit: true
+          idle-timeout: 30000
+          connection-timeout: 30000
+          max-lifetime: 1800000
+          
+      course-db-1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/os_course_1?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+        username: root
+        password: 123456
+        hikari:
+          minimum-idle: 5
+          maximum-pool-size: 20
+          auto-commit: true
+          idle-timeout: 30000
+          connection-timeout: 30000
+          max-lifetime: 1800000
+          
+      # 从库配置  
+      course-db-0-slave:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3307/os_course_0?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+        username: root
+        password: 123456
+        hikari:
+          minimum-idle: 5
+          maximum-pool-size: 20
+          auto-commit: true
+          idle-timeout: 30000
+          connection-timeout: 30000
+          max-lifetime: 1800000
+          
+      course-db-1-slave:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3307/os_course_1?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+        username: root
+        password: 123456
+        hikari:
+          minimum-idle: 5
+          maximum-pool-size: 20
+          auto-commit: true
+          idle-timeout: 30000
+          connection-timeout: 30000
+          max-lifetime: 1800000
+
+    # 分库分表规则配置
+    rules:
+      # 分片规则
+      sharding:
+        # 分片算法配置
+        sharding-algorithms:
+          # 课程分库算法
+          course-database-inline:
+            type: INLINE
+            props:
+              algorithm-expression: course-db-$->{course_id % 2}
+          # 课程分表算法  
+          course-table-inline:
+            type: INLINE
+            props:
+              algorithm-expression: course_$->{course_id % 16}
+          # 课程章节分表算法
+          course-chapter-table-inline:
+            type: INLINE
+            props:
+              algorithm-expression: course_chapter_$->{course_id % 16}
+          # 课程章节课时分表算法
+          course-chapter-period-table-inline:
+            type: INLINE
+            props:
+              algorithm-expression: course_chapter_period_$->{course_id % 16}
+          # 用户课程关联分表算法（按用户ID）
+          user-course-table-inline:
+            type: INLINE
+            props:
+              algorithm-expression: user_course_$->{user_id % 32}
+          # 用户学习记录分表算法（按用户ID）
+          user-study-table-inline:
+            type: INLINE
+            props:
+              algorithm-expression: user_study_$->{user_id % 32}
+              
+        # 默认分库策略
+        default-database-strategy:
+          standard:
+            sharding-column: course_id
+            sharding-algorithm-name: course-database-inline
+            
+        # 分片表配置
+        tables:
+          # 课程表分片
+          course:
+            actual-data-nodes: course-db-$->{0..1}.course_$->{0..15}
+            table-strategy:
+              standard:
+                sharding-column: id
+                sharding-algorithm-name: course-table-inline
+            key-generate-strategy:
+              column: id
+              key-generator-name: snowflake
+              
+          # 课程章节表分片
+          course_chapter:
+            actual-data-nodes: course-db-$->{0..1}.course_chapter_$->{0..15}
+            table-strategy:
+              standard:
+                sharding-column: course_id
+                sharding-algorithm-name: course-chapter-table-inline
+            key-generate-strategy:
+              column: id
+              key-generator-name: snowflake
+              
+          # 课程章节课时表分片
+          course_chapter_period:
+            actual-data-nodes: course-db-$->{0..1}.course_chapter_period_$->{0..15}
+            table-strategy:
+              standard:
+                sharding-column: course_id
+                sharding-algorithm-name: course-chapter-period-table-inline
+            key-generate-strategy:
+              column: id
+              key-generator-name: snowflake
+              
+          # 用户课程关联表分片
+          user_course:
+            actual-data-nodes: course-db-$->{0..1}.user_course_$->{0..31}
+            database-strategy:
+              standard:
+                sharding-column: user_id
+                sharding-algorithm-name: course-database-inline
+            table-strategy:
+              standard:
+                sharding-column: user_id
+                sharding-algorithm-name: user-course-table-inline
+            key-generate-strategy:
+              column: id
+              key-generator-name: snowflake
+              
+          # 用户学习记录表分片
+          user_study:
+            actual-data-nodes: course-db-$->{0..1}.user_study_$->{0..31}
+            database-strategy:
+              standard:
+                sharding-column: user_id
+                sharding-algorithm-name: course-database-inline
+            table-strategy:
+              standard:
+                sharding-column: user_id
+                sharding-algorithm-name: user-study-table-inline
+            key-generate-strategy:
+              column: id
+              key-generator-name: snowflake
+              
+        # 主键生成策略
+        key-generators:
+          snowflake:
+            type: SNOWFLAKE
+            
+        # 广播表（系统配置表等）
+        broadcast-tables:
+          - course_category
+          - resource
+          
+      # 读写分离配置
+      readwrite-splitting:
+        data-sources:
+          course-db-0-readwrite:
+            type: Static
+            props:
+              write-data-source-name: course-db-0
+              read-data-source-names: course-db-0-slave
+              load-balancer-name: round-robin
+          course-db-1-readwrite:
+            type: Static
+            props:
+              write-data-source-name: course-db-1
+              read-data-source-names: course-db-1-slave
+              load-balancer-name: round-robin
+        load-balancers:
+          round-robin:
+            type: ROUND_ROBIN
+            
+    # 系统配置
+    props:
+      # 显示SQL
+      sql-show: true
+      # SQL解析器
+      sql-simple: true
+      # 开启分布式事务
+      xa-transaction-manager-type: Atomikos

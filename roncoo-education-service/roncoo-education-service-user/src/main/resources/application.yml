@@ -1,0 +1,30 @@
+# 用户服务应用配置
+server:
+  servlet:
+    context-path: /user
+
+# MyBatis配置
+mybatis:
+  mapper-locations: classpath:/mybatis/*Mapper.xml
+  type-aliases-package: com.roncoo.education.user.dao.impl.mapper.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    lazy-loading-enabled: true
+    aggressive-lazy-loading: false
+
+# 分页插件配置
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+
+# 日志配置
+logging:
+  level:
+    com.roncoo.education.user.dao.impl.mapper: debug
+    org.apache.shardingsphere: debug
+    com.roncoo.education.common.sharding: debug
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{50}] - %msg%n"

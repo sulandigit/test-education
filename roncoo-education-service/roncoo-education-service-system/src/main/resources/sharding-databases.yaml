@@ -1,0 +1,75 @@
+# ShardingSphere 分库分表配置 - 系统服务
+spring:
+  shardingsphere:
+    # 数据源配置
+    datasource:
+      names: system-db,system-db-slave
+      
+      # 主库配置
+      system-db:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/os_system?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+        username: root
+        password: 123456
+        hikari:
+          minimum-idle: 5
+          maximum-pool-size: 20
+          auto-commit: true
+          idle-timeout: 30000
+          connection-timeout: 30000
+          max-lifetime: 1800000
+          
+      # 从库配置  
+      system-db-slave:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3307/os_system?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+        username: root
+        password: 123456
+        hikari:
+          minimum-idle: 5
+          maximum-pool-size: 20
+          auto-commit: true
+          idle-timeout: 30000
+          connection-timeout: 30000
+          max-lifetime: 1800000
+
+    # 分库分表规则配置
+    rules:
+      # 分片规则
+      sharding:
+        # 广播表（系统配置表等）
+        broadcast-tables:
+          - sys_config
+          - sys_user
+          - sys_role
+          - sys_menu
+          - region
+          
+        # 主键生成策略
+        key-generators:
+          snowflake:
+            type: SNOWFLAKE
+            
+      # 读写分离配置
+      readwrite-splitting:
+        data-sources:
+          system-db-readwrite:
+            type: Static
+            props:
+              write-data-source-name: system-db
+              read-data-source-names: system-db-slave
+              load-balancer-name: round-robin
+        load-balancers:
+          round-robin:
+            type: ROUND_ROBIN
+            
+    # 系统配置
+    props:
+      # 显示SQL
+      sql-show: true
+      # SQL解析器
+      sql-simple: true
+      # 开启分布式事务
+      xa-transaction-manager-type: Atomikos

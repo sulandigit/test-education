@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 分库分表专用日志配置 -->
+    
+    <!-- 控制台输出 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{50}] - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    
+    <!-- 分库分表SQL路由日志 -->
+    <appender name="SHARDING_SQL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/sharding-sql.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/sharding-sql.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{50}] - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    
+    <!-- 分库分表性能监控日志 -->
+    <appender name="SHARDING_MONITOR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/sharding-monitor.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/sharding-monitor.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{50}] - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    
+    <!-- 慢SQL日志 -->
+    <appender name="SLOW_SQL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/slow-sql.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/slow-sql.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>90</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{50}] - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <!-- 只记录WARN级别以上的日志（慢SQL） -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+    </appender>
+    
+    <!-- ShardingSphere框架日志 -->
+    <logger name="org.apache.shardingsphere" level="INFO" additivity="false">
+        <appender-ref ref="SHARDING_SQL"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    
+    <!-- 分库分表SQL拦截器日志 -->
+    <logger name="com.roncoo.education.common.sharding.interceptor" level="DEBUG" additivity="false">
+        <appender-ref ref="SHARDING_SQL"/>
+        <appender-ref ref="SLOW_SQL"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    
+    <!-- 分库分表监控器日志 -->
+    <logger name="com.roncoo.education.common.sharding.monitor" level="INFO" additivity="false">
+        <appender-ref ref="SHARDING_MONITOR"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    
+    <!-- 分库分表算法日志 -->
+    <logger name="com.roncoo.education.common.sharding.algorithm" level="DEBUG" additivity="false">
+        <appender-ref ref="SHARDING_SQL"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    
+    <!-- 数据库连接池日志 -->
+    <logger name="com.zaxxer.hikari" level="INFO" additivity="false">
+        <appender-ref ref="SHARDING_MONITOR"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    
+    <!-- MyBatis SQL日志 -->
+    <logger name="com.roncoo.education.user.dao.impl.mapper" level="DEBUG" additivity="false">
+        <appender-ref ref="SHARDING_SQL"/>
+    </logger>
+    <logger name="com.roncoo.education.course.dao.impl.mapper" level="DEBUG" additivity="false">
+        <appender-ref ref="SHARDING_SQL"/>
+    </logger>
+    <logger name="com.roncoo.education.system.dao.impl.mapper" level="DEBUG" additivity="false">
+        <appender-ref ref="SHARDING_SQL"/>
+    </logger>
+    
+    <!-- 根日志级别 -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+    
+</configuration>

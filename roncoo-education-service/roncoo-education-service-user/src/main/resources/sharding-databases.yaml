@@ -1,0 +1,237 @@
+# ShardingSphere 分库分表配置 - 用户服务
+spring:
+  shardingsphere:
+    # 数据源配置
+    datasource:
+      names: user-db-0,user-db-1,user-db-2,user-db-3,user-db-0-slave,user-db-1-slave,user-db-2-slave,user-db-3-slave
+      
+      # 主库配置
+      user-db-0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/os_user_0?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+        username: root
+        password: 123456
+        hikari:
+          minimum-idle: 5
+          maximum-pool-size: 20
+          auto-commit: true
+          idle-timeout: 30000
+          connection-timeout: 30000
+          max-lifetime: 1800000
+          
+      user-db-1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/os_user_1?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+        username: root
+        password: 123456
+        hikari:
+          minimum-idle: 5
+          maximum-pool-size: 20
+          auto-commit: true
+          idle-timeout: 30000
+          connection-timeout: 30000
+          max-lifetime: 1800000
+          
+      user-db-2:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/os_user_2?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+        username: root
+        password: 123456
+        hikari:
+          minimum-idle: 5
+          maximum-pool-size: 20
+          auto-commit: true
+          idle-timeout: 30000
+          connection-timeout: 30000
+          max-lifetime: 1800000
+          
+      user-db-3:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/os_user_3?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+        username: root
+        password: 123456
+        hikari:
+          minimum-idle: 5
+          maximum-pool-size: 20
+          auto-commit: true
+          idle-timeout: 30000
+          connection-timeout: 30000
+          max-lifetime: 1800000
+          
+      # 从库配置  
+      user-db-0-slave:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3307/os_user_0?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+        username: root
+        password: 123456
+        hikari:
+          minimum-idle: 5
+          maximum-pool-size: 20
+          auto-commit: true
+          idle-timeout: 30000
+          connection-timeout: 30000
+          max-lifetime: 1800000
+          
+      user-db-1-slave:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3307/os_user_1?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+        username: root
+        password: 123456
+        hikari:
+          minimum-idle: 5
+          maximum-pool-size: 20
+          auto-commit: true
+          idle-timeout: 30000
+          connection-timeout: 30000
+          max-lifetime: 1800000
+          
+      user-db-2-slave:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3307/os_user_2?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+        username: root
+        password: 123456
+        hikari:
+          minimum-idle: 5
+          maximum-pool-size: 20
+          auto-commit: true
+          idle-timeout: 30000
+          connection-timeout: 30000
+          max-lifetime: 1800000
+          
+      user-db-3-slave:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3307/os_user_3?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+        username: root
+        password: 123456
+        hikari:
+          minimum-idle: 5
+          maximum-pool-size: 20
+          auto-commit: true
+          idle-timeout: 30000
+          connection-timeout: 30000
+          max-lifetime: 1800000
+
+    # 分库分表规则配置
+    rules:
+      # 分片规则
+      sharding:
+        # 分片算法配置
+        sharding-algorithms:
+          # 用户分库算法
+          user-database-inline:
+            type: INLINE
+            props:
+              algorithm-expression: user-db-$->{user_id % 4}
+          # 用户分表算法  
+          user-table-inline:
+            type: INLINE
+            props:
+              algorithm-expression: users_$->{user_id % 16}
+          # 讲师分表算法
+          lecturer-table-inline:
+            type: INLINE
+            props:
+              algorithm-expression: lecturer_$->{lecturer_id % 8}
+          # 订单分表算法（按用户ID）
+          order-table-inline:
+            type: INLINE
+            props:
+              algorithm-expression: order_info_$->{user_id % 32}
+              
+        # 默认分库策略
+        default-database-strategy:
+          standard:
+            sharding-column: user_id
+            sharding-algorithm-name: user-database-inline
+            
+        # 分片表配置
+        tables:
+          # 用户表分片
+          users:
+            actual-data-nodes: user-db-$->{0..3}.users_$->{0..15}
+            table-strategy:
+              standard:
+                sharding-column: id
+                sharding-algorithm-name: user-table-inline
+            key-generate-strategy:
+              column: id
+              key-generator-name: snowflake
+              
+          # 讲师表分片
+          lecturer:
+            actual-data-nodes: user-db-$->{0..3}.lecturer_$->{0..7}
+            table-strategy:
+              standard:
+                sharding-column: id
+                sharding-algorithm-name: lecturer-table-inline
+            key-generate-strategy:
+              column: id
+              key-generator-name: snowflake
+              
+          # 订单表分片
+          order_info:
+            actual-data-nodes: user-db-$->{0..3}.order_info_$->{0..31}
+            table-strategy:
+              standard:
+                sharding-column: user_id
+                sharding-algorithm-name: order-table-inline
+            key-generate-strategy:
+              column: id
+              key-generator-name: snowflake
+              
+        # 主键生成策略
+        key-generators:
+          snowflake:
+            type: SNOWFLAKE
+            
+        # 广播表（系统配置表等）
+        broadcast-tables:
+          - region
+          
+      # 读写分离配置
+      readwrite-splitting:
+        data-sources:
+          user-db-0-readwrite:
+            type: Static
+            props:
+              write-data-source-name: user-db-0
+              read-data-source-names: user-db-0-slave
+              load-balancer-name: round-robin
+          user-db-1-readwrite:
+            type: Static
+            props:
+              write-data-source-name: user-db-1
+              read-data-source-names: user-db-1-slave
+              load-balancer-name: round-robin
+          user-db-2-readwrite:
+            type: Static
+            props:
+              write-data-source-name: user-db-2
+              read-data-source-names: user-db-2-slave
+              load-balancer-name: round-robin
+          user-db-3-readwrite:
+            type: Static
+            props:
+              write-data-source-name: user-db-3
+              read-data-source-names: user-db-3-slave
+              load-balancer-name: round-robin
+        load-balancers:
+          round-robin:
+            type: ROUND_ROBIN
+            
+    # 系统配置
+    props:
+      # 显示SQL
+      sql-show: true
+      # SQL解析器
+      sql-simple: true
+      # 开启分布式事务
+      xa-transaction-manager-type: Atomikos
