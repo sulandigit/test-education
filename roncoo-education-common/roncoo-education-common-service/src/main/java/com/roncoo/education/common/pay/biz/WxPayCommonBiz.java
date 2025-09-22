@@ -38,14 +38,35 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * 微信支付公共业务
+ * 微信支付公共业务封装类
+ * 封装微信支付相关的公共业务逻辑，支持直营商户和服务商模式
+ * 
+ * 主要功能：
+ * 1. 交易查询 - 支持直营商户和服务商两种模式的交易查询
+ * 2. 交易关闭 - 关闭未支付的交易订单
+ * 3. 交易通知 - 处理微信支付的异步通知回调，包括验签和解密
+ * 4. 交易退款 - 发起微信支付退款请求
+ * 5. 退款查询 - 查询退款状态
+ * 
+ * 支持的交易状态：
+ * - SUCCESS: 支付成功
+ * - REFUND: 转入退款
+ * - NOTPAY: 未支付
+ * - CLOSED: 已关闭
+ * - REVOKED: 已撤销
+ * - USERPAYING: 用户支付中
+ * - PAYERROR: 支付失败
  *
  * @author LYQ
+ * @date 2022/1/1
  */
 @Slf4j
 @Component
 public class WxPayCommonBiz {
 
+    /**
+     * 微信支付通知回调请求头参数常量
+     */
     private static final String WECHAT_PAY_NONCE = "wechatpay-nonce";
     private static final String WECHAT_PAY_SIGNATURE = "wechatpay-signature";
     private static final String WECHAT_PAY_SERIAL = "wechatpay-serial";

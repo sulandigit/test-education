@@ -26,15 +26,32 @@ import java.text.DecimalFormat;
 import java.util.Map;
 
 /**
- * 支付宝支付公共业务
+ * 支付宝支付公共业务封装类
+ * 封装支付宝支付相关的公共业务逻辑，包括交易查询、关闭、通知、退款等功能
+ * 
+ * 主要功能：
+ * 1. 交易查询 - 查询支付宝交易状态
+ * 2. 交易关闭 - 关闭未支付的交易订单
+ * 3. 交易通知 - 处理支付宝的异步通知回调
+ * 4. 交易退款 - 发起支付宝退款请求
+ * 5. 退款查询 - 查询退款状态
+ * 
+ * 支持的交易状态：
+ * - WAIT_BUYER_PAY: 等待买家付款
+ * - TRADE_CLOSED: 交易关闭
+ * - TRADE_SUCCESS: 交易成功
+ * - TRADE_FINISHED: 交易结束
  *
  * @author LYQ
+ * @date 2022/1/1
  */
 @Slf4j
 @Component
 public class AliPayCommonBiz {
 
-    private static final DecimalFormat DF = new DecimalFormat("#.##");
+    /**
+     * 数字格式化器，用于金额格式化
+     */
 
 
     /**
