@@ -19,14 +19,14 @@ import java.util.regex.Pattern;
  * @author wujing
  */
 @Component
-@CacheConfig(cacheNames = {"system"})
+@CacheConfig(cacheNames = {"system-config"})
 @RequiredArgsConstructor
 public class ApiSysConfigBiz extends BaseBiz {
 
     @NotNull
     private final SysConfigCommonBiz sysConfigCommonBiz;
 
-    @Cacheable
+    @Cacheable(key = "'website'")
     public Result<ApiSysConfigWebsiteResp> website() {
         ApiSysConfigWebsiteResp resp = sysConfigCommonBiz.getSysConfig(ApiSysConfigWebsiteResp.class);
         // 公安网备案号处理

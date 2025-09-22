@@ -19,6 +19,7 @@ import com.roncoo.education.course.service.admin.resp.AdminCategoryListResp;
 import com.roncoo.education.course.service.admin.resp.AdminCategoryPageResp;
 import com.roncoo.education.course.service.admin.resp.AdminCategoryViewResp;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -88,6 +89,7 @@ public class AdminCategoryBiz extends BaseBiz {
      * @param req 分类
      * @return 添加结果
      */
+    @CacheEvict(cacheNames = "course-category", allEntries = true)
     public Result<String> save(AdminCategorySaveReq req) {
         Category record = BeanUtil.copyProperties(req, Category.class);
         if (dao.save(record) > 0) {
@@ -112,6 +114,7 @@ public class AdminCategoryBiz extends BaseBiz {
      * @param req 分类修改对象
      * @return 修改结果
      */
+    @CacheEvict(cacheNames = "course-category", allEntries = true)
     public Result<String> edit(AdminCategoryEditReq req) {
         Category record = BeanUtil.copyProperties(req, Category.class);
         if (dao.updateById(record) > 0) {
@@ -126,6 +129,7 @@ public class AdminCategoryBiz extends BaseBiz {
      * @param id ID主键
      * @return 删除结果
      */
+    @CacheEvict(cacheNames = "course-category", allEntries = true)
     public Result<String> delete(Long id) {
         if (dao.deleteById(id) > 0) {
             return Result.success("操作成功");

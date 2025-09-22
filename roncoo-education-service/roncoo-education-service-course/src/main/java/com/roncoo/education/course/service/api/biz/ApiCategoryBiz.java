@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * @author wujing
  */
 @Component
-@CacheConfig(cacheNames = {"course"})
+@CacheConfig(cacheNames = {"course-category"})
 public class ApiCategoryBiz {
 
     @Autowired
@@ -36,7 +36,7 @@ public class ApiCategoryBiz {
      * @return
      * @author wuyun
      */
-    @Cacheable
+    @Cacheable(key = "'list'")
     public Result<List<ApiCategoryResp>> list() {
         // 根据分类类型、层级查询可用状态的课程分类集合
         CategoryExample example = new CategoryExample();

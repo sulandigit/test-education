@@ -6,11 +6,11 @@ import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * redis 自定义缓存管理器
+ * 缓存配置类
+ * 保持原有的自定义KeyGenerator，与多级缓存配置兼容
  *
  * @author wujing
  */
-@EnableCaching
 @Configuration
 public class CacheConfig extends CachingConfigurerSupport {
 
