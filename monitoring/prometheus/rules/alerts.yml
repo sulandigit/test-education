@@ -1,0 +1,130 @@
+# 领课教育系统告警规则
+# 系统级别告警规则
+
+groups:
+  - name: education-system-alerts
+    rules:
+      # 服务可用性告警
+      - alert: ServiceDown
+        expr: up == 0
+        for: 2m
+        labels:
+          severity: critical
+          team: platform
+        annotations:
+          summary: "服务 {{ $labels.job }} 实例 {{ $labels.instance }} 已宕机"
+          description: "服务 {{ $labels.job }} 的实例 {{ $labels.instance }} 已经宕机超过2分钟。请立即检查服务状态。"
+
+      # CPU 使用率告警
+      - alert: HighCPUUsage
+        expr: 100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+          team: platform
+        annotations:
+          summary: "服务器 {{ $labels.instance }} CPU 使用率过高"
+          description: "服务器 {{ $labels.instance }} 的 CPU 使用率已达到 {{ $value }}%，持续超过5分钟。"
+
+      # 内存使用率告警
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          team: platform
+        annotations:
+          summary: "服务器 {{ $labels.instance }} 内存使用率过高"
+          description: "服务器 {{ $labels.instance }} 的内存使用率已达到 {{ $value }}%，持续超过5分钟。"
+
+      # 磁盘使用率告警
+      - alert: HighDiskUsage
+        expr: (1 - (node_filesystem_avail_bytes{fstype!="tmpfs"} / node_filesystem_size_bytes{fstype!="tmpfs"})) * 100 > 90
+        for: 1m
+        labels:
+          severity: warning
+          team: platform
+        annotations:
+          summary: "服务器 {{ $labels.instance }} 磁盘使用率过高"
+          description: "服务器 {{ $labels.instance }} 的磁盘 {{ $labels.mountpoint }} 使用率已达到 {{ $value }}%。"
+
+  - name: education-application-alerts
+    rules:
+      # HTTP 错误率告警
+      - alert: HighErrorRate
+        expr: (rate(http_server_requests_seconds_count{status=~"4..|5.."}[5m]) / rate(http_server_requests_seconds_count[5m])) * 100 > 5
+        for: 3m
+        labels:
+          severity: warning
+          team: development
+        annotations:
+          summary: "应用 {{ $labels.application }} 错误率过高"
+          description: "应用 {{ $labels.application }} 的HTTP错误率在过去5分钟内达到 {{ $value }}%，持续超过3分钟。"
+
+      # HTTP 响应时间告警
+      - alert: HighResponseTime
+        expr: histogram_quantile(0.95, rate(http_server_requests_seconds_bucket[5m])) * 1000 > 2000
+        for: 5m
+        labels:
+          severity: warning
+          team: development
+        annotations:
+          summary: "应用 {{ $labels.application }} 响应时间过长"
+          description: "应用 {{ $labels.application }} 的95%响应时间达到 {{ $value }}ms，持续超过5分钟。"
+
+      # JVM 堆内存使用率告警
+      - alert: HighJVMHeapUsage
+        expr: (jvm_memory_used_bytes{area="heap"} / jvm_memory_max_bytes{area="heap"}) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          team: development
+        annotations:
+          summary: "应用 {{ $labels.application }} JVM堆内存使用率过高"
+          description: "应用 {{ $labels.application }} 的JVM堆内存使用率已达到 {{ $value }}%，持续超过5分钟。"
+
+      # 数据库连接池告警
+      - alert: HighDBConnectionPoolUsage
+        expr: (hikaricp_connections_active / hikaricp_connections_max) * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+          team: development
+        annotations:
+          summary: "应用 {{ $labels.application }} 数据库连接池使用率过高"
+          description: "应用 {{ $labels.application }} 的数据库连接池使用率已达到 {{ $value }}%，持续超过5分钟。"
+
+  - name: education-business-alerts
+    rules:
+      # 支付成功率告警
+      - alert: LowPaymentSuccessRate
+        expr: (rate(education_payment_success_total[1h]) / rate(education_payment_total[1h])) * 100 < 95
+        for: 10m
+        labels:
+          severity: critical
+          team: business
+        annotations:
+          summary: "支付成功率过低"
+          description: "过去1小时内支付成功率仅为 {{ $value }}%，低于95%的阈值，持续超过10分钟。"
+
+      # 用户注册异常告警
+      - alert: NoUserRegistrations
+        expr: increase(education_user_register_total[1h]) == 0
+        for: 1h
+        labels:
+          severity: warning
+          team: business
+        annotations:
+          summary: "1小时内无用户注册"
+          description: "过去1小时内没有新用户注册，可能存在注册流程异常。"
+
+      # 课程播放错误率告警
+      - alert: HighCoursePlayErrorRate
+        expr: (rate(education_course_play_error_total[5m]) / rate(education_course_play_total[5m])) * 100 > 10
+        for: 3m
+        labels:
+          severity: critical
+          team: business
+        annotations:
+          summary: "课程播放错误率过高"
+          description: "课程播放错误率在过去5分钟内达到 {{ $value }}%，持续超过3分钟，严重影响用户体验。"

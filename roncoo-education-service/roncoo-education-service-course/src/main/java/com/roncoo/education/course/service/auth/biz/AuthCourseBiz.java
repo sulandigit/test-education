@@ -5,6 +5,7 @@ import com.roncoo.education.common.config.ThreadContext;
 import com.roncoo.education.common.core.base.Result;
 import com.roncoo.education.common.core.enums.*;
 import com.roncoo.education.common.service.BaseBiz;
+import com.roncoo.education.common.service.monitoring.BusinessMetricsCollector;
 import com.roncoo.education.common.video.VodUtil;
 import com.roncoo.education.common.video.req.VodPlayConfigReq;
 import com.roncoo.education.course.dao.CourseChapterPeriodDao;
@@ -45,6 +46,8 @@ public class AuthCourseBiz extends BaseBiz {
 
     @NotNull
     private final IFeignSysConfig feignSysConfig;
+    @NotNull
+    private final BusinessMetricsCollector metricsCollector;
 
     public Result<AuthCourseSignResp> sign(AuthCourseSignReq req) {
         if (ObjectUtil.isNotEmpty(req.getCourseId()) && ObjectUtil.isEmpty(req.getPeriodId())) {
@@ -72,6 +75,9 @@ public class AuthCourseBiz extends BaseBiz {
         }
 
         if (!check(period)) {
+            // 记录课程播放错误
+            metricsCollector.recordCoursePlayError();
+            metricsCollector.recordCoursePlayError("no_permission");
             return Result.error("没购买，不允许播放");
         }
         // 可以播放
@@ -104,6 +110,13 @@ public class AuthCourseBiz extends BaseBiz {
         } else if (ResourceTypeEnum.DOC.getCode().equals(resource.getResourceType())) {
             docConfig(req, resp);
         }
+        
+        // 记录课程播放指标
+        metricsCollector.recordCoursePlay();
+        String courseType = ResourceTypeEnum.VIDEO.getCode().equals(resource.getResourceType()) ? "video" : 
+                           ResourceTypeEnum.AUDIO.getCode().equals(resource.getResourceType()) ? "audio" : "doc";
+        metricsCollector.recordCoursePlay(courseType);
+        
         return Result.success(resp);
     }
 

@@ -1,0 +1,15 @@
+# Grafana 仪表板配置
+# 自动加载仪表板文件
+
+apiVersion: 1
+
+providers:
+  - name: 'education-dashboards'
+    orgId: 1
+    folder: '领课教育监控'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards

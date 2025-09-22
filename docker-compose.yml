@@ -15,6 +15,7 @@ services:
       - education
     ports:
       - "7700:7700"
+      - "7701:7700"  # 监控端口
   service-system:
     build:
       context: ./roncoo-education-service/roncoo-education-service-system
@@ -30,6 +31,7 @@ services:
       - education
     ports:
       - "7710:7710"
+      - "7711:7710"  # 监控端口
   service-user:
     build:
       context: ./roncoo-education-service/roncoo-education-service-user
@@ -45,6 +47,7 @@ services:
       - education
     ports:
       - "7720:7720"
+      - "7721:7720"  # 监控端口
   service-course:
     build:
       context: ./roncoo-education-service/roncoo-education-service-course
@@ -60,6 +63,11 @@ services:
       - education
     ports:
       - "7730:7730"
+      - "7731:7730"  # 监控端口
 networks:
   education:
-    driver: host
+    driver: bridge
+    name: education
+    ipam:
+      config:
+        - subnet: 172.19.0.0/16

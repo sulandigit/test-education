@@ -1,0 +1,63 @@
+# 领课教育网关服务 Actuator 监控配置
+
+# 管理端点配置
+management:
+  endpoints:
+    web:
+      exposure:
+        # 暴露所有监控端点
+        include: health,info,metrics,prometheus,env,beans,configprops,threaddump,heapdump
+      # 监控端点路径
+      base-path: /actuator
+      # 暴露健康检查详情
+      show-details: always
+  endpoint:
+    health:
+      # 显示健康检查详情
+      show-details: always
+      # 健康检查敏感信息
+      show-components: always
+    prometheus:
+      # 启用 Prometheus 端点
+      enabled: true
+    metrics:
+      # 启用指标端点
+      enabled: true
+  
+  # 指标配置
+  metrics:
+    export:
+      prometheus:
+        # 启用 Prometheus 指标导出
+        enabled: true
+        # 指标步长
+        step: 30s
+        # 指标标签
+        descriptions: true
+    # 启用额外的指标
+    enable:
+      http: true
+      jvm: true
+      process: true
+      system: true
+      application: true
+    # 指标标签
+    tags:
+      application: ${spring.application.name}
+      service: gateway
+      environment: ${spring.profiles.active}
+      version: 14.0.0-RELEASE
+
+# 应用信息配置
+info:
+  app:
+    name: 领课教育网关服务
+    description: 领课教育系统API网关
+    version: 14.0.0-RELEASE
+    service: gateway
+  build:
+    artifact: roncoo-education-gateway
+    group: com.roncoo
+  git:
+    branch: ${git.branch:unknown}
+    commit: ${git.commit.id.abbrev:unknown}

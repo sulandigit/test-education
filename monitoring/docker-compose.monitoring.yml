@@ -1,0 +1,201 @@
+# 领课教育系统监控基础设施
+# Prometheus + Grafana + AlertManager
+version: "3.8"
+
+services:
+  # Prometheus 监控服务器
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    container_name: education-prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/rules:/etc/prometheus/rules:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--storage.tsdb.wal-compression'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+      - '--web.enable-admin-api'
+      - '--log.level=info'
+    networks:
+      - education
+      - monitoring
+    depends_on:
+      - alertmanager
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9090/-/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Grafana 可视化仪表板
+  grafana:
+    image: grafana/grafana:10.0.3
+    container_name: education-grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+    environment:
+      # Grafana 管理员账户配置
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=education123!
+      
+      # 基础配置
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource,grafana-piechart-panel
+      - GF_FEATURE_TOGGLES_ENABLE=ngalert
+      
+      # 安全配置
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+      - GF_SECURITY_COOKIE_SECURE=false
+      - GF_SECURITY_COOKIE_SAMESITE=lax
+      
+      # 用户管理配置
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_USERS_DEFAULT_THEME=dark
+      
+      # 组织配置
+      - GF_ORG_NAME=领课教育
+      - GF_ORG_ROLE=Viewer
+      
+      # 仪表板配置
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/etc/grafana/provisioning/dashboards/system-overview.json
+      
+      # 告警配置
+      - GF_ALERTING_ENABLED=true
+      - GF_UNIFIED_ALERTING_ENABLED=true
+      
+      # 日志配置
+      - GF_LOG_LEVEL=info
+      - GF_LOG_MODE=console,file
+    networks:
+      - monitoring
+    depends_on:
+      - prometheus
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # AlertManager 告警管理器
+  alertmanager:
+    image: prom/alertmanager:v0.25.0
+    container_name: education-alertmanager
+    restart: always
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - alertmanager-data:/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+      - '--web.external-url=http://localhost:9093'
+      - '--cluster.listen-address=0.0.0.0:9094'
+      - '--log.level=info'
+    networks:
+      - monitoring
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9093/-/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Node Exporter 系统指标收集器
+  node-exporter:
+    image: prom/node-exporter:v1.6.1
+    container_name: education-node-exporter
+    restart: always
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+      - '--collector.systemd'
+      - '--collector.processes'
+    networks:
+      - monitoring
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9100/metrics"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # 钉钉通知服务
+  dingtalk-webhook:
+    build:
+      context: .
+      dockerfile: Dockerfile.dingtalk
+    image: education-dingtalk-webhook
+    container_name: education-dingtalk-webhook
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - DINGTALK_WEBHOOK_URL=${DINGTALK_WEBHOOK_URL:-https://oapi.dingtalk.com/robot/send?access_token=YOUR_TOKEN}
+      - DINGTALK_SECRET=${DINGTALK_SECRET:-}
+      - PORT=8080
+    networks:
+      - monitoring
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import requests; requests.get('http://localhost:8080/', timeout=5)\""]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+# 数据卷配置
+volumes:
+  prometheus-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/monitoring/prometheus
+  
+  grafana-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/monitoring/grafana
+  
+  alertmanager-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/monitoring/alertmanager
+
+# 网络配置
+networks:
+  monitoring:
+    driver: bridge
+    name: education-monitoring
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+  
+  education:
+    external: true
+    name: education

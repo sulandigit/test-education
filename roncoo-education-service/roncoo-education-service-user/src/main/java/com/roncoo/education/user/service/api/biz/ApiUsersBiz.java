@@ -12,6 +12,7 @@ import com.roncoo.education.common.core.base.Result;
 import com.roncoo.education.common.core.enums.LoginStatusEnum;
 import com.roncoo.education.common.core.tools.*;
 import com.roncoo.education.common.service.BaseBiz;
+import com.roncoo.education.common.service.monitoring.BusinessMetricsCollector;
 import com.roncoo.education.common.sms.SmsUtil;
 import com.roncoo.education.system.feign.interfaces.IFeignSysConfig;
 import com.roncoo.education.user.dao.LogLoginDao;
@@ -49,6 +50,8 @@ public class ApiUsersBiz extends BaseBiz {
     private IFeignSysConfig feignSysConfig;
     @Autowired
     private HttpServletRequest request;
+    @Autowired
+    private BusinessMetricsCollector metricsCollector;
 
     @Transactional(rollbackFor = Exception.class)
     public Result<UsersLoginResp> register(RegisterReq req) {
@@ -83,6 +86,10 @@ public class ApiUsersBiz extends BaseBiz {
         // 用户注册
         user = register(req.getMobile(), req.getMobilePwd());
 
+        // 记录用户注册指标
+        metricsCollector.recordUserRegister();
+        metricsCollector.recordUserRegister("mobile"); // 按注册来源分类
+
         // 日志
         log(user.getId(), LoginStatusEnum.REGISTER, BeanUtil.copyProperties(req, LogLogin.class));
 
@@ -115,6 +122,9 @@ public class ApiUsersBiz extends BaseBiz {
         // 登录日志，异步处理
         ThreadUtil.newExecutor().execute(() -> {
             log(user.getId(), LoginStatusEnum.SUCCESS, BeanUtil.copyProperties(req, LogLogin.class));
+            // 记录用户登录指标
+            metricsCollector.recordUserLogin();
+            metricsCollector.recordUserLogin("password"); // 按登录方式分类
         });
 
         UsersLoginResp dto = new UsersLoginResp();

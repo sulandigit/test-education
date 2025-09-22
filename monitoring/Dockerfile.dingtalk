@@ -1,0 +1,27 @@
+# 钉钉通知服务 Dockerfile
+FROM python:3.9-slim
+
+LABEL maintainer="领课教育运维团队"
+LABEL description="领课教育监控系统钉钉通知服务"
+
+# 设置工作目录
+WORKDIR /app
+
+# 安装 Python 依赖
+RUN pip install --no-cache-dir requests
+
+# 复制应用代码
+COPY dingtalk-webhook.py .
+
+# 设置权限
+RUN chmod +x dingtalk-webhook.py
+
+# 暴露端口
+EXPOSE 8080
+
+# 健康检查
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD python -c "import requests; requests.get('http://localhost:8080/', timeout=5)"
+
+# 启动服务
+CMD ["python", "dingtalk-webhook.py"]

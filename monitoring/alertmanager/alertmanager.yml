@@ -1,0 +1,134 @@
+# AlertManager 配置文件
+# 领课教育系统告警管理配置
+
+global:
+  # 默认SMTP配置
+  smtp_smarthost: 'localhost:587'
+  smtp_from: 'alerts@education.roncoo.com'
+  smtp_auth_username: 'alerts@education.roncoo.com'
+  smtp_auth_password: 'password'
+  
+  # 钉钉机器人webhook（需要替换为实际的webhook地址）
+  resolve_timeout: 5m
+
+# 告警路由配置
+route:
+  group_by: ['alertname', 'severity', 'team']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 12h
+  receiver: 'default-receiver'
+  routes:
+    # Critical级别告警路由
+    - match:
+        severity: critical
+      receiver: 'critical-alerts'
+      group_wait: 5s
+      repeat_interval: 5m
+    
+    # Warning级别告警路由
+    - match:
+        severity: warning
+      receiver: 'warning-alerts'
+      repeat_interval: 30m
+    
+    # 业务告警专用路由
+    - match:
+        team: business
+      receiver: 'business-alerts'
+      repeat_interval: 15m
+
+# 告警接收器配置
+receivers:
+  # 默认接收器
+  - name: 'default-receiver'
+    email_configs:
+      - to: 'ops@education.roncoo.com'
+        subject: '[领课教育] {{ .Status | toUpper }} - {{ .GroupLabels.alertname }}'
+        body: |
+          {{ range .Alerts }}
+          告警名称: {{ .Annotations.summary }}
+          告警详情: {{ .Annotations.description }}
+          告警级别: {{ .Labels.severity }}
+          负责团队: {{ .Labels.team }}
+          告警时间: {{ .StartsAt.Format "2006-01-02 15:04:05" }}
+          {{ if .EndsAt }}恢复时间: {{ .EndsAt.Format "2006-01-02 15:04:05" }}{{ end }}
+          {{ end }}
+
+  # Critical级别告警接收器
+  - name: 'critical-alerts'
+    email_configs:
+      - to: 'ops@education.roncoo.com,dev-lead@education.roncoo.com'
+        subject: '[紧急] 领课教育系统Critical告警 - {{ .GroupLabels.alertname }}'
+        body: |
+          🚨 Critical级别告警触发！
+          
+          {{ range .Alerts }}
+          📢 {{ .Annotations.summary }}
+          📋 {{ .Annotations.description }}
+          ⚠️  告警级别: {{ .Labels.severity }}
+          👥 负责团队: {{ .Labels.team }}
+          🕐 告警时间: {{ .StartsAt.Format "2006-01-02 15:04:05" }}
+          {{ if .EndsAt }}✅ 恢复时间: {{ .EndsAt.Format "2006-01-02 15:04:05" }}{{ end }}
+          {{ end }}
+          
+          请立即处理此告警！
+    
+    # 钉钉通知配置（需要配置实际的webhook）
+    webhook_configs:
+      - url: 'http://dingtalk-webhook:8080/webhook/critical'
+        send_resolved: true
+        http_config:
+          bearer_token: 'dingtalk-token'
+
+  # Warning级别告警接收器
+  - name: 'warning-alerts'
+    email_configs:
+      - to: 'ops@education.roncoo.com'
+        subject: '[警告] 领课教育系统Warning告警 - {{ .GroupLabels.alertname }}'
+        body: |
+          ⚠️ Warning级别告警
+          
+          {{ range .Alerts }}
+          📢 {{ .Annotations.summary }}
+          📋 {{ .Annotations.description }}
+          ⚠️  告警级别: {{ .Labels.severity }}
+          👥 负责团队: {{ .Labels.team }}
+          🕐 告警时间: {{ .StartsAt.Format "2006-01-02 15:04:05" }}
+          {{ if .EndsAt }}✅ 恢复时间: {{ .EndsAt.Format "2006-01-02 15:04:05" }}{{ end }}
+          {{ end }}
+
+  # 业务告警接收器
+  - name: 'business-alerts'
+    email_configs:
+      - to: 'business@education.roncoo.com,ops@education.roncoo.com'
+        subject: '[业务告警] 领课教育业务指标异常 - {{ .GroupLabels.alertname }}'
+        body: |
+          📊 业务指标告警
+          
+          {{ range .Alerts }}
+          📢 {{ .Annotations.summary }}
+          📋 {{ .Annotations.description }}
+          ⚠️  告警级别: {{ .Labels.severity }}
+          👥 负责团队: {{ .Labels.team }}
+          🕐 告警时间: {{ .StartsAt.Format "2006-01-02 15:04:05" }}
+          {{ if .EndsAt }}✅ 恢复时间: {{ .EndsAt.Format "2006-01-02 15:04:05" }}{{ end }}
+          {{ end }}
+          
+          请检查相关业务流程！
+
+# 告警抑制规则
+inhibit_rules:
+  # 当服务宕机时，抑制其他相关告警
+  - source_match:
+      alertname: 'ServiceDown'
+    target_match_re:
+      alertname: '(HighErrorRate|HighResponseTime|HighJVMHeapUsage)'
+    equal: ['instance']
+
+  # 当CPU使用率过高时，可能导致响应时间增加，抑制响应时间告警
+  - source_match:
+      alertname: 'HighCPUUsage'
+    target_match:
+      alertname: 'HighResponseTime'
+    equal: ['instance']
