@@ -1,0 +1,159 @@
+@import 'variables';
+
+// 全局样式
+html {
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Helvetica, Arial, sans-serif;
+  background-color: $bg-page;
+  color: $text-primary;
+  line-height: 1.6;
+}
+
+// 通用工具类
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.flex { display: flex; }
+.flex-center { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+}
+.flex-between { 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+}
+.flex-column { flex-direction: column; }
+
+.mb-xs { margin-bottom: $spacing-xs; }
+.mb-sm { margin-bottom: $spacing-sm; }
+.mb-md { margin-bottom: $spacing-md; }
+.mb-lg { margin-bottom: $spacing-lg; }
+.mb-xl { margin-bottom: $spacing-xl; }
+
+.mt-xs { margin-top: $spacing-xs; }
+.mt-sm { margin-top: $spacing-sm; }
+.mt-md { margin-top: $spacing-md; }
+.mt-lg { margin-top: $spacing-lg; }
+.mt-xl { margin-top: $spacing-xl; }
+
+.p-xs { padding: $spacing-xs; }
+.p-sm { padding: $spacing-sm; }
+.p-md { padding: $spacing-md; }
+.p-lg { padding: $spacing-lg; }
+.p-xl { padding: $spacing-xl; }
+
+// 卡片样式
+.card {
+  background: $bg-white;
+  border-radius: $border-radius-large;
+  box-shadow: $box-shadow-base;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  
+  &:hover {
+    box-shadow: $box-shadow-light;
+  }
+}
+
+// 按钮样式增强
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $border-radius-base;
+  font-size: $font-size-sm;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  
+  &.btn-primary {
+    background-color: $primary-color;
+    color: white;
+    
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+  
+  &.btn-outline {
+    background-color: transparent;
+    border: 1px solid $primary-color;
+    color: $primary-color;
+    
+    &:hover {
+      background-color: $primary-color;
+      color: white;
+    }
+  }
+}
+
+// 响应式栅格系统
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -#{$spacing-sm};
+}
+
+.col {
+  padding: 0 $spacing-sm;
+  flex: 1;
+}
+
+@for $i from 1 through 24 {
+  .col-#{$i} {
+    width: percentage($i / 24);
+    padding: 0 $spacing-sm;
+  }
+}
+
+// 响应式断点
+@media (max-width: $breakpoint-sm) {
+  .container {
+    padding: 0 $spacing-sm;
+  }
+  
+  .row {
+    margin: 0 -#{$spacing-xs};
+  }
+  
+  .col {
+    padding: 0 $spacing-xs;
+  }
+  
+  .hidden-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: $breakpoint-sm) {
+  .hidden-desktop {
+    display: none !important;
+  }
+}
+
+// 加载动画
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid $primary-color;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
