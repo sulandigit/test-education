@@ -22,7 +22,7 @@ import com.roncoo.education.system.feign.interfaces.vo.VodConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**

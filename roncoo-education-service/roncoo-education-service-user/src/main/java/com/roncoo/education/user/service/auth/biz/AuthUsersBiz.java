@@ -12,7 +12,7 @@ import com.roncoo.education.user.service.auth.resp.AuthUsersResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * AUTH-用户信息
