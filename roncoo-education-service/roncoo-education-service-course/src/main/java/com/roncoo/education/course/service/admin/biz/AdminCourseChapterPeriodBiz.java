@@ -17,7 +17,7 @@ import com.roncoo.education.course.service.admin.resp.AdminCourseChapterPeriodVi
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * ADMIN-课时信息

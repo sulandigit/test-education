@@ -19,7 +19,7 @@ import com.roncoo.education.course.service.auth.resp.AuthUserCourseResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;

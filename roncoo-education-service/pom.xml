@@ -24,6 +24,12 @@
     </modules>
 
     <dependencies>
+        <!-- Spring Cloud LoadBalancer (替代Ribbon) -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+        
         <dependency>
             <groupId>com.roncoo</groupId>
             <artifactId>roncoo-education-feign-system</artifactId>
