@@ -1,42 +1,66 @@
 package com.roncoo.education.course.dao.impl.mapper.entity;
 
+import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
+import cn.org.atool.fluent.mybatis.annotation.TableField;
+import cn.org.atool.fluent.mybatis.annotation.TableId;
+import cn.org.atool.fluent.mybatis.base.RichEntity;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class Course implements Serializable {
+@FluentMybatis(table = "course")
+
+public class Course extends RichEntity implements Serializable {
+    @TableId
     private Long id;
 
+    @TableField("gmt_create")
     private LocalDateTime gmtCreate;
 
+    @TableField("gmt_modified")
     private LocalDateTime gmtModified;
 
+    @TableField("status_id")
     private Integer statusId;
 
+    @TableField("sort")
     private Integer sort;
 
+    @TableField("lecturer_id")
     private Long lecturerId;
 
+    @TableField("category_id")
     private Long categoryId;
 
+    @TableField("course_name")
     private String courseName;
 
+    @TableField("course_logo")
     private String courseLogo;
 
+    @TableField("is_free")
     private Integer isFree;
 
+    @TableField("ruling_price")
     private BigDecimal rulingPrice;
 
+    @TableField("course_price")
     private BigDecimal coursePrice;
 
+    @TableField("is_putaway")
     private Integer isPutaway;
 
+    @TableField("course_sort")
     private Integer courseSort;
 
+    @TableField("count_buy")
     private Integer countBuy;
 
+    @TableField("count_study")
     private Integer countStudy;
 
+    @TableField("introduce")
     private String introduce;
 
     private static final long serialVersionUID = 1L;

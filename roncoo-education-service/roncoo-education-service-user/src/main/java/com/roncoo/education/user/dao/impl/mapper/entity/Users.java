@@ -1,31 +1,50 @@
 package com.roncoo.education.user.dao.impl.mapper.entity;
 
+import cn.org.atool.fluent.mybatis.annotation.FluentMybatis;
+import cn.org.atool.fluent.mybatis.annotation.TableField;
+import cn.org.atool.fluent.mybatis.annotation.TableId;
+import cn.org.atool.fluent.mybatis.base.RichEntity;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Users implements Serializable {
+@FluentMybatis(table = "users")
+
+public class Users extends RichEntity implements Serializable {
+    @TableId
     private Long id;
 
+    @TableField("gmt_create")
     private LocalDateTime gmtCreate;
 
+    @TableField("gmt_modified")
     private LocalDateTime gmtModified;
 
+    @TableField("status_id")
     private Integer statusId;
 
+    @TableField("mobile")
     private String mobile;
 
+    @TableField("mobile_salt")
     private String mobileSalt;
 
+    @TableField("mobile_psw")
     private String mobilePsw;
 
+    @TableField("nickname")
     private String nickname;
 
+    @TableField("user_sex")
     private Integer userSex;
 
+    @TableField("user_age")
     private Integer userAge;
 
+    @TableField("user_head")
     private String userHead;
 
+    @TableField("remark")
     private String remark;
 
     private static final long serialVersionUID = 1L;

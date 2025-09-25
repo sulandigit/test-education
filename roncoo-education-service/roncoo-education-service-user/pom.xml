@@ -13,6 +13,22 @@
     <name>roncoo-educationr-service-use</name>
 
     <dependencies>
+        <!-- FluentMyBatis Dependencies -->
+        <dependency>
+            <groupId>com.github.atool</groupId>
+            <artifactId>fluent-mybatis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.atool</groupId>
+            <artifactId>fluent-mybatis-processor</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.atool</groupId>
+            <artifactId>fluent-mybatis-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        
         <!-- test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
