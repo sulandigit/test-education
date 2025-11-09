@@ -1,0 +1,198 @@
+# Roncoo Generator 配置示例
+
+# 数据库配置
+database:
+  # 数据库连接URL
+  url: jdbc:mysql://localhost:3306/roncoo_education?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+  # 数据库用户名
+  username: root
+  # 数据库密码
+  password: 123456
+  # 驱动类名
+  driverClassName: com.mysql.cj.jdbc.Driver
+  # 需要生成代码的表名列表（支持通配符%）
+  tableNames:
+    - user
+    - course
+    - order
+    # - %  # 生成所有表
+  # 表名前缀（生成实体类时会移除此前缀）
+  tablePrefix: t_
+  # 数据库模式/库名
+  schema: roncoo_education
+  # 连接池配置
+  connectionPool:
+    maxConnections: 10
+    minConnections: 1
+    connectionTimeout: 30000
+    idleTimeout: 600000
+
+# 项目配置
+project:
+  # 项目名称
+  projectName: roncoo-education-service-user
+  # 包名前缀
+  packagePrefix: com.roncoo.education
+  # 模块包名
+  packageName: user
+  # 作者信息
+  author: roncoo-generator
+  # 项目版本
+  version: 1.0.0
+  # 项目描述
+  description: 用户管理模块
+  
+  # 命名策略配置
+  naming:
+    # 实体类命名策略
+    entityNaming: PascalCase
+    # DAO类命名后缀
+    daoSuffix: Dao
+    # Service类命名后缀
+    serviceSuffix: Service
+    # Controller类命名后缀
+    controllerSuffix: Controller
+    # 表名到类名的转换策略
+    tableToEntityStrategy: underline_to_camel
+    # 字段名到属性名的转换策略
+    columnToPropertyStrategy: underline_to_camel
+  
+  # 代码风格配置
+  codeStyle:
+    # 是否使用Lombok注解
+    useLombok: true
+    # 是否生成Swagger注解
+    useSwagger: true
+    # 是否生成详细注释
+    generateComments: true
+    # 缩进字符（空格或制表符）
+    indentChar: "    "
+    # 行结束符
+    lineEnding: "\n"
+
+# 模板配置
+template:
+  # 模板根路径
+  templatePath: template
+  # 模板引擎类型（FREEMARKER, VELOCITY, THYMELEAF）
+  engine: FREEMARKER
+  # 模板编码
+  encoding: UTF-8
+  # 是否启用模板缓存
+  cacheEnabled: true
+  # 缓存更新延迟（秒）
+  cacheUpdateDelay: 5
+  # 自定义模板路径（可选）
+  customTemplatePath: custom-templates
+  
+  # 模板组织配置
+  organization:
+    # 核心模板目录
+    coreTemplateDir: core
+    # 扩展模板目录
+    extensionTemplateDir: extension
+    # 自定义模板目录
+    customTemplateDir: custom
+    
+    # 模板分组配置
+    templateGroups:
+      dao:
+        name: dao
+        description: 数据访问层模板
+        enabled: true
+        templates:
+          dao: dao/dao.java.ftl
+          daoImpl: dao/impl/daoImpl.java.ftl
+        outputPathPattern: src/main/java/{packagePath}/dao/
+      
+      service:
+        name: service
+        description: 业务逻辑层模板
+        enabled: true
+        templates:
+          service: service/service.java.ftl
+          serviceImpl: service/impl/serviceImpl.java.ftl
+        outputPathPattern: src/main/java/{packagePath}/service/
+      
+      controller:
+        name: controller
+        description: 控制器层模板
+        enabled: true
+        templates:
+          adminController: controller/admin/adminController.java.ftl
+          authController: controller/auth/authController.java.ftl
+        outputPathPattern: src/main/java/{packagePath}/controller/
+
+# 插件配置
+plugins:
+  - name: CodeFormatter
+    className: com.roncoo.generator.plugin.CodeFormatterPlugin
+    enabled: true
+    order: 200
+    properties:
+      style: google
+      indentSize: 4
+      useTabs: false
+  
+  - name: SwaggerGenerator
+    className: com.roncoo.generator.plugin.SwaggerGeneratorPlugin
+    enabled: true
+    order: 150
+    properties:
+      swaggerVersion: "3.0"
+      apiTitle: "用户管理 API"
+      apiVersion: "1.0.0"
+      apiDescription: "用户管理模块API文档"
+  
+  - name: DocumentGenerator
+    className: com.roncoo.generator.plugin.DocumentGeneratorPlugin
+    enabled: true
+    order: 300
+    properties:
+      documentType: markdown
+      generateApiDoc: true
+      generateDbDoc: true
+  
+  - name: TestGenerator
+    className: com.roncoo.generator.plugin.TestGeneratorPlugin
+    enabled: true
+    order: 400
+    properties:
+      framework: junit5
+      generateUnitTest: true
+      generateIntegrationTest: true
+      coverageTarget: 80
+
+# 输出配置
+output:
+  # 基础输出目录
+  baseDirectory: /data/generated-code
+  # 是否覆盖已存在的文件
+  overwriteFiles: false
+  # 是否创建备份
+  createBackup: true
+  # 备份目录（可选，默认为 baseDirectory/backup）
+  backupDirectory: /data/generated-code/backup
+  # 输出文件编码
+  encoding: UTF-8
+  # 是否生成输出报告
+  generateReport: true
+  # 报告输出路径（可选）
+  reportPath: /data/generated-code/generation-report.html
+  # 文件权限设置（Unix系统）
+  filePermissions: "644"
+  # 目录权限设置（Unix系统）
+  directoryPermissions: "755"
+
+# 全局变量
+globalVariables:
+  # 公司名称
+  companyName: 领课网络
+  # 项目官网
+  projectWebsite: https://www.roncoo.com
+  # 是否生成序列化ID
+  generateSerialVersionUID: true
+  # 是否生成建表SQL
+  generateCreateSql: true
+  # 是否生成示例数据
+  generateSampleData: false
