@@ -5,7 +5,7 @@ import com.roncoo.education.system.dao.SysConfigDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * AUTH-系统配置
