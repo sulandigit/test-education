@@ -11,6 +11,9 @@
         <result column="course_id" jdbcType="BIGINT" property="courseId"/>
         <result column="comment_id" jdbcType="BIGINT" property="commentId"/>
         <result column="comment_text" jdbcType="VARCHAR" property="commentText"/>
+        <result column="like_count" jdbcType="INTEGER" property="likeCount"/>
+        <result column="reply_count" jdbcType="INTEGER" property="replyCount"/>
+        <result column="mention_users" jdbcType="VARCHAR" property="mentionUsers"/>
     </resultMap>
     <sql id="Example_Where_Clause">
         <where>
@@ -71,7 +74,8 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-        id, gmt_create, gmt_modified, status_id, sort, user_id, course_id, comment_id, comment_text
+        id, gmt_create, gmt_modified, status_id, sort, user_id, course_id, comment_id, 
+        comment_text, like_count, reply_count, mention_users
     </sql>
     <select id="selectByExample" parameterType="com.roncoo.education.course.dao.impl.mapper.entity.UserCourseCommentExample" resultMap="BaseResultMap">
         select
@@ -110,10 +114,12 @@
     <insert id="insert" parameterType="com.roncoo.education.course.dao.impl.mapper.entity.UserCourseComment">
         insert into user_course_comment (id, gmt_create, gmt_modified,
                                          status_id, sort, user_id,
-                                         course_id, comment_id, comment_text)
+                                         course_id, comment_id, comment_text,
+                                         like_count, reply_count, mention_users)
         values (#{id,jdbcType=BIGINT}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
                 #{statusId,jdbcType=TINYINT}, #{sort,jdbcType=INTEGER}, #{userId,jdbcType=BIGINT},
-                #{courseId,jdbcType=BIGINT}, #{commentId,jdbcType=BIGINT}, #{commentText,jdbcType=VARCHAR})
+                #{courseId,jdbcType=BIGINT}, #{commentId,jdbcType=BIGINT}, #{commentText,jdbcType=VARCHAR},
+                #{likeCount,jdbcType=INTEGER}, #{replyCount,jdbcType=INTEGER}, #{mentionUsers,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.roncoo.education.course.dao.impl.mapper.entity.UserCourseComment">
         insert into user_course_comment
@@ -145,6 +151,15 @@
             <if test="commentText != null">
                 comment_text,
             </if>
+            <if test="likeCount != null">
+                like_count,
+            </if>
+            <if test="replyCount != null">
+                reply_count,
+            </if>
+            <if test="mentionUsers != null">
+                mention_users,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -173,6 +188,15 @@
             </if>
             <if test="commentText != null">
                 #{commentText,jdbcType=VARCHAR},
+            </if>
+            <if test="likeCount != null">
+                #{likeCount,jdbcType=INTEGER},
+            </if>
+            <if test="replyCount != null">
+                #{replyCount,jdbcType=INTEGER},
+            </if>
+            <if test="mentionUsers != null">
+                #{mentionUsers,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>

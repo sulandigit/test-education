@@ -3,7 +3,13 @@ package com.roncoo.education.course.dao.impl.mapper.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class UserCourseComment implements Serializable {
+/**
+ * 课程评论点赞实体类
+ *
+ * @author assistant
+ * @date 2025-09-20
+ */
+public class UserCourseCommentLike implements Serializable {
     private Long id;
 
     private LocalDateTime gmtCreate;
@@ -12,21 +18,11 @@ public class UserCourseComment implements Serializable {
 
     private Integer statusId;
 
-    private Integer sort;
-
     private Long userId;
-
-    private Long courseId;
 
     private Long commentId;
 
-    private String commentText;
-
-    private Integer likeCount; // 点赞数量
-
-    private Integer replyCount; // 回复数量
-
-    private String mentionUsers; // @提及的用户ID，逗号分隔
+    private Integer likeType; // 1-点赞，0-取消点赞
 
     private static final long serialVersionUID = 1L;
 
@@ -62,28 +58,12 @@ public class UserCourseComment implements Serializable {
         this.statusId = statusId;
     }
 
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
     public Long getUserId() {
         return userId;
     }
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public Long getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(Long courseId) {
-        this.courseId = courseId;
     }
 
     public Long getCommentId() {
@@ -94,36 +74,12 @@ public class UserCourseComment implements Serializable {
         this.commentId = commentId;
     }
 
-    public String getCommentText() {
-        return commentText;
+    public Integer getLikeType() {
+        return likeType;
     }
 
-    public void setCommentText(String commentText) {
-        this.commentText = commentText == null ? null : commentText.trim();
-    }
-
-    public Integer getLikeCount() {
-        return likeCount;
-    }
-
-    public void setLikeCount(Integer likeCount) {
-        this.likeCount = likeCount;
-    }
-
-    public Integer getReplyCount() {
-        return replyCount;
-    }
-
-    public void setReplyCount(Integer replyCount) {
-        this.replyCount = replyCount;
-    }
-
-    public String getMentionUsers() {
-        return mentionUsers;
-    }
-
-    public void setMentionUsers(String mentionUsers) {
-        this.mentionUsers = mentionUsers == null ? null : mentionUsers.trim();
+    public void setLikeType(Integer likeType) {
+        this.likeType = likeType;
     }
 
     @Override
@@ -136,14 +92,9 @@ public class UserCourseComment implements Serializable {
         sb.append(", gmtCreate=").append(gmtCreate);
         sb.append(", gmtModified=").append(gmtModified);
         sb.append(", statusId=").append(statusId);
-        sb.append(", sort=").append(sort);
         sb.append(", userId=").append(userId);
-        sb.append(", courseId=").append(courseId);
         sb.append(", commentId=").append(commentId);
-        sb.append(", commentText=").append(commentText);
-        sb.append(", likeCount=").append(likeCount);
-        sb.append(", replyCount=").append(replyCount);
-        sb.append(", mentionUsers=").append(mentionUsers);
+        sb.append(", likeType=").append(likeType);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

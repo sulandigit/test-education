@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.roncoo.education.course.dao.impl.mapper.UserCourseCommentLikeMapper">
+    <resultMap id="BaseResultMap" type="com.roncoo.education.course.dao.impl.mapper.entity.UserCourseCommentLike">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+        <result column="status_id" jdbcType="TINYINT" property="statusId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="comment_id" jdbcType="BIGINT" property="commentId"/>
+        <result column="like_type" jdbcType="TINYINT" property="likeType"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        id, gmt_create, gmt_modified, status_id, user_id, comment_id, like_type
+    </sql>
+    
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_course_comment_like
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    
+    <select id="selectByUserIdAndCommentId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_course_comment_like
+        where user_id = #{userId,jdbcType=BIGINT} 
+        and comment_id = #{commentId,jdbcType=BIGINT}
+        and status_id = 1
+        and like_type = 1
+    </select>
+    
+    <select id="countLikesByCommentId" resultType="java.lang.Integer">
+        select count(*)
+        from user_course_comment_like
+        where comment_id = #{commentId,jdbcType=BIGINT}
+        and status_id = 1
+        and like_type = 1
+    </select>
+    
+    <select id="listLikeCountsByCommentIds" resultMap="BaseResultMap">
+        select comment_id, count(*) as like_count
+        from user_course_comment_like
+        where comment_id in
+        <foreach collection="commentIds" item="commentId" open="(" separator="," close=")">
+            #{commentId}
+        </foreach>
+        and status_id = 1
+        and like_type = 1
+        group by comment_id
+    </select>
+    
+    <select id="listUserLikesByCommentIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_course_comment_like
+        where user_id = #{userId,jdbcType=BIGINT}
+        and comment_id in
+        <foreach collection="commentIds" item="commentId" open="(" separator="," close=")">
+            #{commentId}
+        </foreach>
+        and status_id = 1
+        and like_type = 1
+    </select>
+    
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from user_course_comment_like
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    
+    <delete id="deleteByUserIdAndCommentId">
+        delete from user_course_comment_like
+        where user_id = #{userId,jdbcType=BIGINT} 
+        and comment_id = #{commentId,jdbcType=BIGINT}
+    </delete>
+    
+    <insert id="insertSelective" parameterType="com.roncoo.education.course.dao.impl.mapper.entity.UserCourseCommentLike">
+        insert into user_course_comment_like
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create,
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified,
+            </if>
+            <if test="statusId != null">
+                status_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="commentId != null">
+                comment_id,
+            </if>
+            <if test="likeType != null">
+                like_type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="gmtCreate != null">
+                #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="statusId != null">
+                #{statusId,jdbcType=TINYINT},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="commentId != null">
+                #{commentId,jdbcType=BIGINT},
+            </if>
+            <if test="likeType != null">
+                #{likeType,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+    
+    <update id="updateByPrimaryKeySelective" parameterType="com.roncoo.education.course.dao.impl.mapper.entity.UserCourseCommentLike">
+        update user_course_comment_like
+        <set>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="statusId != null">
+                status_id = #{statusId,jdbcType=TINYINT},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="commentId != null">
+                comment_id = #{commentId,jdbcType=BIGINT},
+            </if>
+            <if test="likeType != null">
+                like_type = #{likeType,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>
