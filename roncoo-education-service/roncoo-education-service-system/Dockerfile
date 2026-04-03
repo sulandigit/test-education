@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-oracle
+FROM eclipse-temurin:17-jdk
 MAINTAINER roncoo
 ARG JAVA_OPTS="-Xmx128M"
 ENV JAVA_OPTS=$JAVA_OPTS
