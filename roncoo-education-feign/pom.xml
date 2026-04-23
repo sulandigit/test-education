@@ -21,6 +21,8 @@
         <module>roncoo-education-feign-user</module>
         <!-- 资源接口工程 -->
         <module>roncoo-education-feign-course</module>
+        <!-- 大屏数据接口工程 -->
+        <module>roncoo-education-feign-dashboard</module>
     </modules>
 
     <dependencies>
